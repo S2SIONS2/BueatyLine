@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+NL:wght@100..400&display=swap'); /* Playwrite NL */
+@import url('https://fonts.googleapis.com/css2?family=Grandiflora+One&family=Playwrite+NL:wght@100..400&display=swap'); /* Grandiflora One */
+@import url('https://fonts.googleapis.com/css2?family=Grandiflora+One&family=Playwrite+NL:wght@100..400&family=Song+Myung&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Grandiflora+One&family=Playwrite+NL:wght@100..400&family=Song+Myung&display=swap'); /* Gowun Botong */
+
+html, body{
+  max-width: 530px;
+  margin: auto;
+  font-family: 'Gowun Botong', "sans-serif", cursive !important;
+  font-weight: 400;
+  width: 100%;
+  height: 100%;
+  font-size: 18px;
+  /* background-color: #ff7f3e; */
+}
+
+#root{
+  width: 100%;
+  height: 100%;
+  /* background-color: #ff7f3e; */
+}

@@ -1,0 +1,62 @@
+@use '/src/scss/style.scss';
+
+.App{
+    width: 100%;
+    height: 100%;
+}
+.logo{
+    width: 100%;
+    height: 60px;
+    // color: #fff;
+    font-family: "Playwrite NL";
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+a{
+    color: inherit !important;
+    text-decoration: none !important;
+}
+.menu{
+    position: absolute;
+    top: 70px;
+    right: 0px;
+    background-color: #fafafa;
+    height: calc(100% - 70px);
+    background-color: #fff;
+    border: 2px solid style.$salmon;
+}
+.menu >a{
+    width: 100%;
+    height: 50px;
+    overflow-x: hidden;
+    border-bottom: 2px solid style.$salmon;
+    display: flex;
+    align-items: center;
+    &:hover{
+        background-color: style.$light-salmon;
+        color: #fff;
+    }
+}
+.content{
+    width: 100%;
+    height: calc(100% - 60px);
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    background-color: style.$light-orange;
+    margin-top:20px;
+    padding:10px 20px;
+    box-sizing: border-box;
+    border:2px solid style.$orange;
+}
+
+
+.subTitle{
+    width: 100%;
+    font-size: 1.8rem;
+    color: style.$orange;
+    font-weight: bold;
+}
+.logoutBtn{
+    color: #787878;
+    font-size: 16px;
+}

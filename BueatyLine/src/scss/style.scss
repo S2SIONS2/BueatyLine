@@ -1,0 +1,100 @@
+// scss import
+@import 'bootstrap/scss/bootstrap';
+@import "../node_modules/bootstrap/scss/variables";
+
+// css 변수
+// 색상
+$point-color: #61C0BF ;
+$point-color-light: #BBDED6;
+$point-color-dark: #7e928e;
+
+$red: #aa1803;
+$brown: #bd613c;
+$peach: #f1baa1;
+$orange: #ff7f3e;
+$salmon: #ff906d;
+$olive: #bcaf4d;
+$green: #6d8c00;
+$beige: #F7E7DC;
+$pink: #FFC7C7;
+$purple: #8785A2;
+
+$white-gray: #F6F6F6;
+$light-pink: #ffbece;
+$light-pink2: #FFE2E2;
+$light-salmon: #ffa699;
+$light-olive: #f9faef;
+$light-dark-gary:#758694;
+$light-beige: #FFF8F3;
+$light-purple: #f9f8ff;
+$light-orange: #fffaf4;
+
+$dark-gray: #405D72;
+$dark-green: #203c00;
+$dark-purple:#45445E;
+$black-green: #192400;
+
+
+
+
+
+
+/*공통 css*/
+// 모달
+.modalContainer{
+    position: fixed;
+    top:40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 400px;
+    background-color: #fff;
+    z-index: 999;
+}
+.modalHeader{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding-left: 10px;
+    background-color: $salmon;
+    color: #fff;
+}
+.modalContent{
+    width: 100%;
+    height: calc(100% - 40px);
+    border:2px solid #ddd;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 5px;
+}
+.modalContent >*{
+    width: 100%;
+}
+
+// 버튼 css
+button{
+    background-color: transparent;
+    border: none;
+}
+.btn_small{
+    width: 70px !important;
+}
+.btn_middle{
+    width: 100px !important;
+}
+.btn_large{
+    width: 50% !important;
+}
+.btn_extra_large{
+    width: 100% !important;
+}
+
+.btn-point-dark{
+    background-color: $point-color-dark;
+    color: #fff;
+}
+.btn.btn-light{
+    background-color: #ebecee;
+    color:#222;
+}

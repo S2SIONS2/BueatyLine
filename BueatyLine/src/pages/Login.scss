@@ -1,0 +1,39 @@
+@use '/src/scss/style.scss';
+
+.Login{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .loginWrap{
+        width: 80%;
+        height: 60%;
+        border:3px solid style.$orange;
+        border-radius: 20px;
+        position: absolute;
+        top:45%;
+        transform: translateY(-50%);
+    }
+
+    .loginTitle{
+        font-size: 2.5rem;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    .loginContent{
+        input{
+            border: 1px solid style.$orange;
+        }
+        .confirmLogin{
+            background-color: style.$orange;
+            color: #fff;
+        }
+    }
+    a{
+        color: inherit;
+        text-decoration: none;
+        color: #787878;
+        font-size: 0.8rem;
+    }
+}
