@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
-import { faMinus } from "@fortawesome/free-solid-svg-icons";
 
 const CategoryList = () => {
     const [modal, setModal] = useState(false); // 리스트 추가 모달
@@ -14,6 +13,7 @@ const CategoryList = () => {
         category_price: ''
     });
     const [modifyInput, setModifyInput] = useState({}); // 수정 팝업 input value 처리
+    const accessToken = localStorage.getItem('accessToken'); // 인증용 accessToken값 가져오기
     
     // input value 등록
     const onChangeValue = (e) => {
@@ -27,7 +27,6 @@ const CategoryList = () => {
     // api list 가져옴
     const apiList = async () => {
         const url = '/getList';
-        const accessToken = localStorage.getItem('accessToken');
         const response = await axios.get(url, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -72,12 +71,16 @@ const CategoryList = () => {
             category_price: category_price,
             category_sort: 0,
             category_cha: 1,
-            parent_id: 0
+            parent_id: 0,
         }
 
         // 추가 api
-        const url = '/add';
-        const response = await axios.post(url, params);
+        const url = '/add';   
+        const response = await axios.post(url, params, {      
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
 
         // api 입력 성공 시
         if (response.data.code === 200){
@@ -104,7 +107,12 @@ const CategoryList = () => {
         let params = {
             idx: idx
         };
-        const response = await axios.get(url, {params: params});
+        const response = await axios.get(url, {
+            params: params,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
         if(response.data.code === 200){
             getList();
             closeListModal(index);
@@ -127,7 +135,11 @@ const CategoryList = () => {
             category_sort: 0,
             category_cha: 1
         };
-        const response = await axios.post(url, params);
+        const response = await axios.post(url, params, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
 
         // api 입력 실패 시 
         if (category_name === '') {
@@ -158,9 +170,23 @@ const CategoryList = () => {
         });
     }
 
+    // 리스트 검색
+    const checkWord = () => {
+        alert(1)
+    }
+
     return (
         <div className="CategoryList">
-            <div className='row align-items-center justify-content-end w-100 m-0 p-0' style={{ width: '100%' }}>
+            <div className='row align-items-center justify-content-end w-100 m-0 p-0'>
+                <input type='text' className='w-auto mb-3 me-2'/>
+                <button 
+                    className='btn mb-3 w-auto' type='button'
+                    onClick={checkWord}
+                >
+                    검색
+                </button>    
+            </div>
+            <div className='row align-items-center justify-content-end w-100 m-0 p-0'>
                 <button 
                     className='openModal btn mb-3 w-auto' type='button'
                     onClick={() => setModal(true)}
@@ -221,7 +247,7 @@ const CategoryList = () => {
                                         <div className='listModal'>
                                             <div className='row justify-content-end closeIcon row-cols-auto m-0'>
                                                 <button type='button' onClick={() => confirmDeleteValue(index)}>
-                                                    <FontAwesomeIcon icon={faMinus} />      
+                                                    삭제      
                                                 </button>                                                
                                             </div>
                                             <div className='addCategoryArea row flex-column' style={{marginLeft: 0, marginRight: 0, marginTop: '10px', marginBottom: '10px'}}>

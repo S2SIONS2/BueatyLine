@@ -76,7 +76,7 @@ function App() {
     const decodeExp = jwtDecode(accessToken) // accessTokenExp 디코드 값
     const now = Math.floor(Date.now() / 1000) // 현재 시간
     
-    if(now > decodeExp){
+    if(now > decodeExp.exp){
       await getAccessToken();
     }
   } 
