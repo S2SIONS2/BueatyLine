@@ -1,10 +1,11 @@
 import './reset.css';
 import './App.scss';
 import axios from 'axios';
-import { Routes, Route, Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode'
 
 function App() {
   // nav 열고 닫기
@@ -38,21 +39,54 @@ function App() {
 
   // 로그아웃 
   const logout = async () => {
-    // const accessToken = localStorage.getItem('accessToken');
-    // const logoutResult = await axios.post("/logout", {
-    //   headers: {
-    //     'Authorization': `Bearer ${accessToken}`
-    //   }
-    // })
-    // console.log(logoutResult)
-    // if(logoutResult.data.code === 200){
-    //   alert('로그아웃 되었습니다.')
-    //   handleLogout()
-    // }
+    const accessToken = localStorage.getItem('accessToken');
+    const logoutResult = await axios.post("/logout", {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+    console.log(logoutResult)
+    if(logoutResult.data.code === 200){
+      alert('로그아웃 되었습니다.')
+      handleLogout()
+    }
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
     handleLogout();
   }
+
+  // 액세스 토큰 재발급
+  const getAccessToken = async () => {
+    try{
+      const refreshToken = localStorage.getItem('refreshToken');
+      const response = await axios.post("/refreshToken", {
+          'refresh_token' : refreshToken
+      })
+
+      const newAccessToken = response.data.data.token
+      localStorage.setItem('accessToken', newAccessToken)
+    } catch(error){
+      console.log('Error Occured: ', error)
+    }
+  }
+
+  // 리프레시 토큰 확인
+  const checkRefreshToken = async () => {
+    const accessToken = localStorage.getItem('accessToken'); 
+    const decodeExp = jwtDecode(accessToken) // accessTokenExp 디코드 값
+    const now = Math.floor(Date.now() / 1000) // 현재 시간
+    
+    if(now > decodeExp){
+      await getAccessToken();
+    }
+  } 
+  
+  const location = useLocation() // 페이지 이동 시에 토큰 확인
+  useEffect(() => {
+    checkRefreshToken()
+  }, [location])
+
+  
 
   return (
     <div className="App position-relative" ref={bodyRef}>

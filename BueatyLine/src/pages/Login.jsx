@@ -1,8 +1,7 @@
 import './Login.scss';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import App from '../App'
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     // 로그인 인풋 폼
@@ -59,8 +58,9 @@ const Login = () => {
             "refresh_token" : refreshToken
         })
 
-        console.log(setRefreshToken)
+        setRefreshToken()
     }
+
     useEffect(() => {
         chkLogin();
 
