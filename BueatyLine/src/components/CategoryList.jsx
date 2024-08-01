@@ -15,7 +15,7 @@ const CategoryList = () => {
     const [modifyInput, setModifyInput] = useState({}); // 수정 팝업 input value 처리
     const accessToken = localStorage.getItem('accessToken'); // 인증용 accessToken값 가져오기
     const [searchValue, setSearchValue] = useState(''); // 검색할 input
-    const [searchList, setSearchList] = useState('');
+    const [searchList, setSearchList] = useState([]);
     
     // input value 등록
     const onChangeValue = (e) => {
@@ -176,9 +176,14 @@ const CategoryList = () => {
     const searchApi = async () => {
         try {
             const data = await apiList();
-            const searchWords = data.list.map(obj => obj.list).filter(item => item && item.includes(searchValue));
-            console.log(searchWords)
-            console.log(data) 
+            const searchedList = data.list
+                .filter(item => {
+                    return item.category_name && item.category_name.includes(searchValue);
+                });
+            if(searchedList.length > 0){
+                setSearchList(searchedList)
+                console.log(searchList)
+            }
         } catch (error) {
             console.error(`Error list:`, error);
         }
@@ -198,20 +203,18 @@ const CategoryList = () => {
                 const data = await apiList();
                 const searchedList = data.list
                     .filter(item => {
-                        console.log("Filtering item:", item.category_name);
                         return item.category_name && item.category_name.includes(searchValue);
                     });
                 if(searchedList.length > 0){
-                    console.log(searchedList)
+                    setSearchList(searchedList)
+                    console.log(searchList)
                 }
-                
-                
             } catch (error) {
                 console.error(`Error list:`, error);
             }
         }
         searchApi()
-    })
+    }, [searchValue])
 
     return (
         <div className="CategoryList">
@@ -277,6 +280,52 @@ const CategoryList = () => {
                     <div className='icon'></div>
                 </div>
                 {
+                    searchList.map((item, index) => (
+                        <div key={index} className='row align-items-center justify-content-between td p-0 m-0'>
+                            <div className='text-center col-5'>{item.category_name}</div>
+                            <div className='text-center col-5'>{item.category_price}₩</div>
+                            <div className='icon' onClick={() => openListModal(index)}>
+                                <FontAwesomeIcon icon={faPen} /> 
+                                {listModal[index] && 
+                                    <div className='listModalContainer' onClick={(e) => e.stopPropagation()}>                                                                             
+                                        <div className='listModal'>
+                                            <div className='row justify-content-end closeIcon row-cols-auto m-0'>
+                                                <button type='button' onClick={() => confirmDeleteValue(index)}>
+                                                    삭제      
+                                                </button>                                                
+                                            </div>
+                                            <div className='addCategoryArea row flex-column' style={{marginLeft: 0, marginRight: 0, marginTop: '10px', marginBottom: '10px'}}>
+                                                <div className='addCategory'>
+                                                    <div className='row align-items-center mb-1'>
+                                                        <div className='col-3'>
+                                                            시술명 : 
+                                                        </div>
+                                                        <div className='col-9 row'>
+                                                            <input type='text' name='category_name' placeholder={item.category_name} value={modifyInput[index]?.category_name || item.category_name} onChange={(e) => onChangeHandle(e, index)}/>
+                                                        </div>
+                                                    </div>
+                                                    <div className='row align-items-center'>
+                                                        <div className='col-3'>
+                                                            금액 : 
+                                                        </div>
+                                                        <div className='col-9 row'>
+                                                            <input type='number' name='category_price' placeholder={item.category_price} value={modifyInput[index]?.category_price || item.category_price} onChange={(e) => onChangeHandle(e, index)}/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className='btn_wrap'>
+                                                <button type='button' className='btn btn-point-dark' onClick={() => confirmModifyValue(index)}>확인</button>
+                                                <button type='button' className='btn btn-light' onClick={() => closeListModal(index)}>닫기</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    ))
+                }
+                {/* {
                     list.map((item, index) => (
                         <div key={index} className='row align-items-center justify-content-between td p-0 m-0'>
                             <div className='text-center col-5'>{item.category_name}</div>
@@ -322,7 +371,7 @@ const CategoryList = () => {
                             
                         </div>
                     ))
-                }
+                } */}
             </div>
         </div>
     );
