@@ -26,7 +26,6 @@ const Login = () => {
     // 엔터 키로 로그인 하기
     const handleBtn = async (e) => {
         if(e.key === 'Enter'){
-            console.log('엔터 입력!')
             await loginInfo()
         }
     }
@@ -75,7 +74,6 @@ const Login = () => {
                         <input type='text' className='mb-2' name='userId' value={user.userId} onChange={onChangeHandle} onKeyDown={handleBtn} placeholder='ID'/>
                         <input type='password' className='mb-4' name='userPw' value={user.userPw} onChange={onChangeHandle} onKeyDown={handleBtn} placeholder='PassWord'/>
                         <button type='button' className='confirmLogin btn' onClick={loginInfo}>Login</button>
-                        {/* <Link to="/app">로그인</Link> */}
                     </div>
                     {/* <div className='row align-items-center justify-content-end'>
                         <button type='button' className='joinBtn w-auto mt-1'>

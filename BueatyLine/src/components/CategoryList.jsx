@@ -14,6 +14,8 @@ const CategoryList = () => {
     });
     const [modifyInput, setModifyInput] = useState({}); // 수정 팝업 input value 처리
     const accessToken = localStorage.getItem('accessToken'); // 인증용 accessToken값 가져오기
+    const [searchValue, setSearchValue] = useState(''); // 검색할 input
+    const [searchList, setSearchList] = useState('');
     
     // input value 등록
     const onChangeValue = (e) => {
@@ -170,15 +172,54 @@ const CategoryList = () => {
         });
     }
 
+    // api 검색
+    const searchApi = async () => {
+        try {
+            const data = await apiList();
+            const searchWords = data.list.map(obj => obj.list).filter(item => item && item.includes(searchValue));
+            console.log(searchWords)
+            console.log(data) 
+        } catch (error) {
+            console.error(`Error list:`, error);
+        }
+    }
+    // input 값 변경
+    const onChangeInput = (e) => {
+        setSearchValue(e.target.value)
+    }
     // 리스트 검색
     const checkWord = () => {
-        alert(1)
+        searchApi();
     }
+    // 검색 값 변동 시 마다 검색
+    useEffect(() => {
+        const searchApi = async () => {
+            try {
+                const data = await apiList();
+                const searchedList = data.list
+                    .filter(item => {
+                        console.log("Filtering item:", item.category_name);
+                        return item.category_name && item.category_name.includes(searchValue);
+                    });
+                if(searchedList.length > 0){
+                    console.log(searchedList)
+                }
+                
+                
+            } catch (error) {
+                console.error(`Error list:`, error);
+            }
+        }
+        searchApi()
+    })
 
     return (
         <div className="CategoryList">
             <div className='row align-items-center justify-content-end w-100 m-0 p-0'>
-                <input type='text' className='w-auto mb-3 me-2'/>
+                <input type='text' className='w-auto mb-3 me-2'
+                    value={searchValue}
+                    onChange={onChangeInput}
+                />
                 <button 
                     className='btn mb-3 w-auto' type='button'
                     onClick={checkWord}

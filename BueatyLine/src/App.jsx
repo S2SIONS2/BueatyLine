@@ -45,7 +45,7 @@ function App() {
         'Authorization': `Bearer ${accessToken}`
       }
     })
-    console.log(logoutResult)
+
     if(logoutResult.data.code === 200){
       alert('로그아웃 되었습니다.')
       handleLogout()
