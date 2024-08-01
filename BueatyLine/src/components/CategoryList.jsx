@@ -8,6 +8,7 @@ const CategoryList = () => {
     const [modal, setModal] = useState(false); // 리스트 추가 모달
     const [listModal, setListModal] = useState([]); // 리스트 수정 모달 상태 배열
     const [list, setList] = useState([]); // api 리스트
+    const [formattedList, setFormattedList] = useState([]); // 쉼표가 포함된 가격 리스트
     const [categoryInput, setCategoryInput] = useState({ // 카테고리 폼 지정
         category_name: '',
         category_price: ''
@@ -38,7 +39,6 @@ const CategoryList = () => {
                 'Authorization': `Bearer ${accessToken}`
             }
         });
-        console.log(response)
         return response.data;
     };
 
@@ -49,6 +49,14 @@ const CategoryList = () => {
             const listFromApi = data.list;
             setList(listFromApi);
             setListModal(listFromApi.map(() => false)); // 모달 상태 초기화
+
+            // 금액 표시 시 쉼표 추가
+            const formattedPrices = listFromApi.map(item => ({
+                ...item,
+                category_price: item.category_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            }));
+            setFormattedList(formattedPrices);
+
         } catch (error) {
             console.error(`Error list:`, error);
         }
@@ -275,57 +283,11 @@ const CategoryList = () => {
             <div className='row flex-column m-0 p-0'>
                 <div className='row row-cols-2 align-items-center justify-content-between th p-0 m-0'>
                     <div className='text-center col-5'>시술 명</div>
-                    <div className='text-center col-5'>비용</div>
+                    <div className='text-center col-5'>금액</div>
                     <div className='icon'></div>
                 </div>
-                {/* {
-                    searchList.map((item, index) => (
-                        <div key={index} className='row align-items-center justify-content-between td p-0 m-0'>
-                            <div className='text-center col-5'>{item.category_name}</div>
-                            <div className='text-center col-5'>{item.category_price}₩</div>
-                            <div className='icon' onClick={() => openListModal(index)}>
-                                <FontAwesomeIcon icon={faPen} /> 
-                                {listModal[index] && 
-                                    <div className='listModalContainer' onClick={(e) => e.stopPropagation()}>                                                                             
-                                        <div className='listModal'>
-                                            <div className='row justify-content-end closeIcon row-cols-auto m-0'>
-                                                <button type='button' onClick={() => confirmDeleteValue(index)}>
-                                                    삭제      
-                                                </button>                                                
-                                            </div>
-                                            <div className='addCategoryArea row flex-column' style={{marginLeft: 0, marginRight: 0, marginTop: '10px', marginBottom: '10px'}}>
-                                                <div className='addCategory'>
-                                                    <div className='row align-items-center mb-1'>
-                                                        <div className='col-3'>
-                                                            시술명 : 
-                                                        </div>
-                                                        <div className='col-9 row'>
-                                                            <input type='text' name='category_name' placeholder={item.category_name} value={modifyInput[index]?.category_name || item.category_name} onChange={(e) => onChangeHandle(e, index)}/>
-                                                        </div>
-                                                    </div>
-                                                    <div className='row align-items-center'>
-                                                        <div className='col-3'>
-                                                            금액 : 
-                                                        </div>
-                                                        <div className='col-9 row'>
-                                                            <input type='number' name='category_price' placeholder={item.category_price} value={modifyInput[index]?.category_price || item.category_price} onChange={(e) => onChangeHandle(e, index)}/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className='btn_wrap'>
-                                                <button type='button' className='btn btn-point-dark' onClick={() => confirmModifyValue(index)}>확인</button>
-                                                <button type='button' className='btn btn-light' onClick={() => closeListModal(index)}>닫기</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    ))
-                } */}
                 {
-                    list.map((item, index) => (
+                    formattedList.map((item, index) => (
                         <div key={index} className='row align-items-center justify-content-between td p-0 m-0'>
                             <div className='text-center col-5'>{item.category_name}</div>
                             <div className='text-center col-5'>{item.category_price}₩</div>
