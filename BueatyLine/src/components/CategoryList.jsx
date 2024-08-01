@@ -14,10 +14,9 @@ const CategoryList = () => {
     });
     const [modifyInput, setModifyInput] = useState({}); // 수정 팝업 input value 처리
     const accessToken = localStorage.getItem('accessToken'); // 인증용 accessToken값 가져오기
-    const [searchValue, setSearchValue] = useState(''); // 검색할 input
-    const [searchList, setSearchList] = useState([]);
     
-    // input value 등록
+    
+    // api 등록 할 input value
     const onChangeValue = (e) => {
         const { name, value } = e.target;
         setCategoryInput({
@@ -26,17 +25,24 @@ const CategoryList = () => {
         });
     }
 
-    // api list 가져옴
+    // api list 호출
     const apiList = async () => {
         const url = '/getList';
+        const param = {
+            sfield : 'category_name',
+            skeyword : searchValue
+        }
         const response = await axios.get(url, {
+            params: param,
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         });
+        console.log(response)
         return response.data;
     };
 
+    // list 변수에 카테고리 리스트 담기
     const getList = async () => {
         try {
             const data = await apiList();
@@ -52,12 +58,12 @@ const CategoryList = () => {
         getList();
     }, []); 
 
-    // 확인 버튼 클릭 시
+    // 카테고리 추가 기능 - 확인 버튼 클릭 시
     const addedApi = async () => {
         const category_name = categoryInput.category_name;
         const category_price = categoryInput.category_price;
 
-        // api 입력 실패 시 
+        // api 추가 실패 시 
         if (category_name === '') {
             alert('카테고리 명을 작성 해주세요.');
             return false;
@@ -76,7 +82,7 @@ const CategoryList = () => {
             parent_id: 0,
         }
 
-        // 추가 api
+        // 추가 api 호출
         const url = '/add';   
         const response = await axios.post(url, params, {      
             headers: {
@@ -160,7 +166,7 @@ const CategoryList = () => {
         }
     }
 
-    // 수정 모달 내 input 이벤트 핸들링
+    // 수정 모달 내 카테고리 name, price input 이벤트 핸들링
     const onChangeHandle = (e, index) => {
         const { name, value } = e.target;
         setModifyInput({
@@ -171,18 +177,15 @@ const CategoryList = () => {
             }
         });
     }
-
-    // api 검색
-    const searchApi = async () => {
+    
+    // api를 이용한 카테고리 검색
+    const [searchValue, setSearchValue] = useState(''); // 검색할 input value
+    const searchBtn = async () => {
         try {
             const data = await apiList();
             const searchedList = data.list
-                .filter(item => {
-                    return item.category_name && item.category_name.includes(searchValue);
-                });
             if(searchedList.length > 0){
-                setSearchList(searchedList)
-                console.log(searchList)
+                setList(searchedList)
             }
         } catch (error) {
             console.error(`Error list:`, error);
@@ -194,7 +197,7 @@ const CategoryList = () => {
     }
     // 리스트 검색
     const checkWord = () => {
-        searchApi();
+        searchBtn();
     }
     // 검색 값 변동 시 마다 검색
     useEffect(() => {
@@ -202,12 +205,8 @@ const CategoryList = () => {
             try {
                 const data = await apiList();
                 const searchedList = data.list
-                    .filter(item => {
-                        return item.category_name && item.category_name.includes(searchValue);
-                    });
                 if(searchedList.length > 0){
-                    setSearchList(searchedList)
-                    console.log(searchList)
+                    setList(searchedList)
                 }
             } catch (error) {
                 console.error(`Error list:`, error);
@@ -219,7 +218,7 @@ const CategoryList = () => {
     return (
         <div className="CategoryList">
             <div className='row align-items-center justify-content-end w-100 m-0 p-0'>
-                <input type='text' className='w-auto mb-3 me-2'
+                <input type='text' className='flex-grow-1 w-auto mb-3 me-2'
                     value={searchValue}
                     onChange={onChangeInput}
                 />
@@ -279,7 +278,7 @@ const CategoryList = () => {
                     <div className='text-center col-5'>비용</div>
                     <div className='icon'></div>
                 </div>
-                {
+                {/* {
                     searchList.map((item, index) => (
                         <div key={index} className='row align-items-center justify-content-between td p-0 m-0'>
                             <div className='text-center col-5'>{item.category_name}</div>
@@ -324,8 +323,8 @@ const CategoryList = () => {
                             </div>
                         </div>
                     ))
-                }
-                {/* {
+                } */}
+                {
                     list.map((item, index) => (
                         <div key={index} className='row align-items-center justify-content-between td p-0 m-0'>
                             <div className='text-center col-5'>{item.category_name}</div>
@@ -371,7 +370,7 @@ const CategoryList = () => {
                             
                         </div>
                     ))
-                } */}
+                }
             </div>
         </div>
     );
