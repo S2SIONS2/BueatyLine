@@ -102,7 +102,7 @@ function App() {
             nav &&
             <div className='menu row flex-column align-items-end p-0' style={{ width: outerWidth + 'px' }}>
               <Link to="/app/category" onClick={() => setNav(false)}>작업 카테고리</Link>
-              <Link to="/app/contact" onClick={() => setNav(false)}>주소록</Link>
+              {/* <Link to="/app/contact" onClick={() => setNav(false)}>주소록</Link> */}
               {/* <Link to="/app/totalchart" onClick={() => setNav(false)}>통계 차트</Link> */}
 
               <div className='row m-0 p-0'>
