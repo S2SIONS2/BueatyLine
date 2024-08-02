@@ -57,12 +57,11 @@ const Login = () => {
             "refresh_token" : refreshToken
         })
 
-        setRefreshToken()
+        localStorage.setItem('refreshToken', setRefreshToken.data.data.refreshToken);
     }
 
     useEffect(() => {
         chkLogin();
-
     }, [])
 
     return(

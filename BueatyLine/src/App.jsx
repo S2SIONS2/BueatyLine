@@ -73,10 +73,10 @@ function App() {
   // 리프레시 토큰 확인
   const checkRefreshToken = async () => {
     const accessToken = localStorage.getItem('accessToken'); 
-    const decodeExp = jwtDecode(accessToken) // accessTokenExp 디코드 값
+    const decodeToken = jwtDecode(accessToken) // accessTokenExp 디코드 값
     const now = Math.floor(Date.now() / 1000) // 현재 시간
     
-    if(now > decodeExp.exp){
+    if(now > decodeToken.exp){
       await getAccessToken();
     }
   } 
