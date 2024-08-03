@@ -289,8 +289,8 @@ const CategoryList = () => {
                 {
                     formattedList.map((item, index) => (
                         <div key={index} className='row align-items-center justify-content-between td p-0 m-0'>
-                            <div className='text-center col-5'>{item.category_name}</div>
-                            <div className='text-center col-5'>{item.category_price}₩</div>
+                            <div className='text-center col-5 ellipsis'>{item.category_name}</div>
+                            <div className='text-center col-5 ellipsis'>{item.category_price}₩</div>
                             <div className='icon' onClick={() => openListModal(index)}>
                                 <FontAwesomeIcon icon={faPen} /> 
                                 {listModal[index] && 

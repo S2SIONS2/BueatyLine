@@ -33,7 +33,7 @@ const Login = () => {
     // login jwt 구현
     // 1. 로그인 정보 보내기
     const loginInfo = async () => {
-        const loginResult = await axios.post("/login", {
+        const loginResult = await axios.post("/api/login", {
             login_id: user.userId,
             login_pw: user.userPw 
         })

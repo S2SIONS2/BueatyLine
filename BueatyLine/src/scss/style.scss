@@ -40,6 +40,13 @@ $black-green: #192400;
 
 
 /*공통 css*/
+input{
+    border-color: $orange !important;
+    border-top-color: $orange !important;
+    border-width: 1px;
+    outline: none;
+    border-radius: 3px;
+}
 // 모달
 .modalContainer{
     position: fixed;
@@ -97,4 +104,11 @@ button{
 .btn.btn-light{
     background-color: #ebecee;
     color:#222;
+}
+
+// class css
+.ellipsis{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

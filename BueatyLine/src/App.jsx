@@ -70,8 +70,8 @@ function App() {
     }
   }
 
-  // 리프레시 토큰 확인
-  const checkRefreshToken = async () => {
+  // 액세스 토큰 만료 확인
+  const checkAccessToken = async () => {
     const accessToken = localStorage.getItem('accessToken'); 
     const decodeToken = jwtDecode(accessToken) // accessTokenExp 디코드 값
     const now = Math.floor(Date.now() / 1000) // 현재 시간
@@ -83,7 +83,7 @@ function App() {
   
   const location = useLocation() // 페이지 이동 시에 토큰 확인
   useEffect(() => {
-    checkRefreshToken()
+    checkAccessToken()
   }, [location])
 
   
@@ -102,7 +102,7 @@ function App() {
             nav &&
             <div className='menu row flex-column align-items-end p-0' style={{ width: outerWidth + 'px' }}>
               <Link to="/app/category" onClick={() => setNav(false)}>작업 카테고리</Link>
-              {/* <Link to="/app/contact" onClick={() => setNav(false)}>주소록</Link> */}
+              <Link to="/app/contact" onClick={() => setNav(false)}>주소록</Link>
               {/* <Link to="/app/totalchart" onClick={() => setNav(false)}>통계 차트</Link> */}
 
               <div className='row m-0 p-0'>
