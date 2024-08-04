@@ -40,7 +40,7 @@ function App() {
   // 로그아웃 
   const logout = async () => {
     const accessToken = localStorage.getItem('accessToken');
-    const logoutResult = await axios.post("/logout", {
+    const logoutResult = await axios.post("/api/login_api/logout", {
       headers: {
         'Authorization': `Bearer ${accessToken}`
       }
@@ -55,11 +55,31 @@ function App() {
     handleLogout();
   }
 
+  // 액세스 토큰과 리프레시 토큰이 없다면
+  const checkAfterEmpty = async () => {
+    const accessToken = localStorage.getItem('accessToken')
+    const refreshToken = localStorage.getItem('refreshToken')
+
+    if(accessToken == null){
+      await getAccessToken()
+      
+    }
+
+    if(refreshToken == null) {
+      await handleLogout()
+    }
+  }
+
   // 액세스 토큰 재발급
   const getAccessToken = async () => {
+    const refreshToken = localStorage.getItem('refreshToken')
+    if(refreshToken == null){
+      handleLogout()
+    }
+
     try{
       const refreshToken = localStorage.getItem('refreshToken');
-      const response = await axios.post("/refreshToken", {
+      const response = await axios.post("/api/login_api/refresh_token", {
           'refresh_token' : refreshToken
       })
 
@@ -73,17 +93,33 @@ function App() {
   // 액세스 토큰 만료 확인
   const checkAccessToken = async () => {
     const accessToken = localStorage.getItem('accessToken'); 
+    const refreshToken = localStorage.getItem('refreshToken');
     const decodeToken = jwtDecode(accessToken) // accessTokenExp 디코드 값
     const now = Math.floor(Date.now() / 1000) // 현재 시간
     
-    if(now > decodeToken.exp){
-      await getAccessToken();
+    if(refreshToken == null){
+      return handleLogout()
     }
-  } 
+
+    if(accessToken == null){
+      await getAccessToken();
+      return
+    }
+
+    try{
+      if(now > decodeToken.exp){
+        await getAccessToken();
+      }
+    }catch(error){
+      handleLogout()
+    }
+    
+  }
   
   const location = useLocation() // 페이지 이동 시에 토큰 확인
   useEffect(() => {
-    checkAccessToken()
+    checkAfterEmpty();
+    checkAccessToken();
   }, [location])
 
   

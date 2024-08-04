@@ -1,6 +1,6 @@
 import './Login.scss';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -33,7 +33,7 @@ const Login = () => {
     // login jwt 구현
     // 1. 로그인 정보 보내기
     const loginInfo = async () => {
-        const loginResult = await axios.post("/api/login", {
+        const loginResult = await axios.post("/api/login_api/login", {
             login_id: user.userId,
             login_pw: user.userPw 
         })
@@ -49,20 +49,6 @@ const Login = () => {
             alert(loginResult.data.message)
         }
     }
-
-    // 2. 로컬 스토리지 로그인 체크
-    const chkLogin = async () => {
-        const refreshToken = localStorage.getItem('refreshToken')
-        const setRefreshToken = await axios.post("/refreshToken", {
-            "refresh_token" : refreshToken
-        })
-
-        localStorage.setItem('refreshToken', setRefreshToken.data.data.refreshToken);
-    }
-
-    useEffect(() => {
-        chkLogin();
-    }, [])
 
     return(
         <div className="Login">

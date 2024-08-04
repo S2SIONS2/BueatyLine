@@ -86,8 +86,8 @@ const Contact = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className='btn_wrap'>
-                                <button className='btn-point-dark btn btn_small' 
+                            <div className='btn_wrap row align-items-center justify-content-end'>
+                                <button className='btn-point-dark btn btn_small me-2' 
                                     // onClick={addedApi}
                                 >
                                     확인

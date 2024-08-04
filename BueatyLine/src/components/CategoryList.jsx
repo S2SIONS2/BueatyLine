@@ -28,7 +28,7 @@ const CategoryList = () => {
 
     // api list 호출
     const apiList = async () => {
-        const url = '/getList';
+        const url = '/api/work_category_api/getList';
         const param = {
             sfield : 'category_name',
             skeyword : searchValue
@@ -91,7 +91,7 @@ const CategoryList = () => {
         }
 
         // 추가 api 호출
-        const url = '/add';   
+        const url = '/api/work_category_api/add';   
         const response = await axios.post(url, params, {      
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -119,7 +119,7 @@ const CategoryList = () => {
     const confirmDeleteValue = async (index) => {
         const idx = list[index].category_idx;
         // 삭제 api
-        const url = '/del';
+        const url = '/api/work_category_api/del';
         let params = {
             idx: idx
         };
@@ -142,7 +142,7 @@ const CategoryList = () => {
         const category_price = modifyInput[index]?.category_price || list[index].category_price;
 
         // 수정 api
-        const url = '/add';
+        const url = '/api/work_category_api/add';
         let params = {
             category_idx: idx,
             parent_id: 0,
