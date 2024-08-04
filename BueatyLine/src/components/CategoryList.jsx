@@ -215,6 +215,7 @@ const CategoryList = () => {
                 const searchedList = data.list
                 if(searchedList.length > 0){
                     setList(searchedList)
+                    getList(searchValue)
                 }
             } catch (error) {
                 console.error(`Error list:`, error);

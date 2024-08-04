@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+NL:wght@100..400&display=swap'); /* Playwrite NL */
 @import url('https://fonts.googleapis.com/css2?family=Grandiflora+One&family=Playwrite+NL:wght@100..400&display=swap'); /* Grandiflora One */
 @import url('https://fonts.googleapis.com/css2?family=Grandiflora+One&family=Playwrite+NL:wght@100..400&family=Song+Myung&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Grandiflora+One&family=Playwrite+NL:wght@100..400&family=Song+Myung&display=swap'); /* Gowun Botong */
+/* @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Grandiflora+One&family=Playwrite+NL:wght@100..400&family=Song+Myung&display=swap'); Gowun Botong */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap');
 
 html, body{
   max-width: 530px;
   margin: auto;
-  font-family: 'Gowun Botong', "sans-serif", cursive !important;
+  font-family: "Nanum Gothic Coding", "sans-serif", cursive !important;
   font-weight: 400;
   width: 100%;
   height: 100%;

@@ -13,17 +13,4 @@
             color: #fff;
         }
     }
-
-    .th{
-        height: 40px;
-        background-color: style.$orange;
-        color: #fff;
-    }
-    .td{
-        height: 40px;
-        background-color: #fff;
-    }
-    .td:nth-of-type(2n){
-        background-color: style.$light-orange;
-    }
 }
