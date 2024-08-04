@@ -62,29 +62,24 @@ function App() {
 
     if(accessToken == null){
       await getAccessToken()
-      
+      return;
     }
 
-    if(refreshToken == null) {
+    if(refreshToken == null && accessToken == null) {
       await handleLogout()
     }
   }
 
   // 액세스 토큰 재발급
   const getAccessToken = async () => {
-    const refreshToken = localStorage.getItem('refreshToken')
-    if(refreshToken == null){
-      handleLogout()
-    }
-
     try{
       const refreshToken = localStorage.getItem('refreshToken');
       const response = await axios.post("/api/login_api/refresh_token", {
           'refresh_token' : refreshToken
       })
-
       const newAccessToken = response.data.data.token
       localStorage.setItem('accessToken', newAccessToken)
+
     } catch(error){
       console.log('Error Occured: ', error)
     }
@@ -97,13 +92,16 @@ function App() {
     const decodeToken = jwtDecode(accessToken) // accessTokenExp 디코드 값
     const now = Math.floor(Date.now() / 1000) // 현재 시간
     
-    if(refreshToken == null){
+    if(refreshToken == null && accessToken == null){
       return handleLogout()
     }
 
     if(accessToken == null){
-      await getAccessToken();
-      return
+      if(refreshToken !== null){
+        await getAccessToken();
+        return
+      }
+      
     }
 
     try{
