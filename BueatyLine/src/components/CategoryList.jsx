@@ -254,16 +254,16 @@ const CategoryList = () => {
                             <div className='addCategoryArea row flex-column' style={{marginLeft: 0, marginRight: 0, marginTop: '10px', marginBottom: '10px'}}>
                                 <div className='addCategory'>
                                     <div className='row align-items-center mb-1'>
-                                        <div className='col-3'>
-                                            시술명 : 
+                                        <div className='col-3 text-nowrap'>
+                                            시술명
                                         </div>
                                         <div className='col-9 row p-0'>
                                             <input type='text' name='category_name' value={categoryInput.category_name} onChange={onChangeValue}/>
                                         </div>
                                     </div>
                                     <div className='row align-items-center'>
-                                        <div className='col-3'>
-                                            금액 : 
+                                        <div className='col-3 text-nowrap'>
+                                            금액
                                         </div>
                                         <div className='col-9 row p-0'>
                                             <input type='number' name='category_price' value={categoryInput.category_price} onChange={onChangeValue}/>
@@ -283,7 +283,7 @@ const CategoryList = () => {
             }
             <div className='row flex-column m-0 p-0'>
                 <div className='row row-cols-2 align-items-center justify-content-between th p-0 m-0'>
-                    <div className='text-center col-5'>시술 명</div>
+                    <div className='text-center col-5 text-nowrap'>시술 명</div>
                     <div className='text-center col-5'>금액</div>
                     <div className='icon'></div>
                 </div>
@@ -305,16 +305,16 @@ const CategoryList = () => {
                                             <div className='addCategoryArea row flex-column' style={{marginLeft: 0, marginRight: 0, marginTop: '10px', marginBottom: '10px'}}>
                                                 <div className='addCategory'>
                                                     <div className='row align-items-center mb-1'>
-                                                        <div className='col-3'>
-                                                            시술명 : 
+                                                        <div className='col-3 text-nowrap'>
+                                                            시술명
                                                         </div>
                                                         <div className='col-9 row'>
                                                             <input type='text' name='category_name' placeholder={item.category_name} value={modifyInput[index]?.category_name || item.category_name} onChange={(e) => onChangeHandle(e, index)}/>
                                                         </div>
                                                     </div>
                                                     <div className='row align-items-center'>
-                                                        <div className='col-3'>
-                                                            금액 : 
+                                                        <div className='col-3 text-nowrap'>
+                                                            금액
                                                         </div>
                                                         <div className='col-9 row'>
                                                             <input type='number' name='category_price' placeholder={item.category_price} value={modifyInput[index]?.category_price || item.category_price} onChange={(e) => onChangeHandle(e, index)}/>
