@@ -353,7 +353,7 @@ const ContactList = () => {
                                                         이름
                                                     </div>
                                                     <div className='col-8 row'>
-                                                        <input type='number' name='member_name' placeholder={item.member_name} value={modifyInput[index]?.member_name || item.member_name} onChange={(e) => onChangeHandle(e, index)}/>
+                                                        <input type='text' name='member_name' placeholder={item.member_name} value={modifyInput[index]?.member_name || item.member_name} onChange={(e) => onChangeHandle(e, index)}/>
                                                     </div>
                                                 </div>
                                                 <div className='row align-items-center mb-1'>
@@ -361,7 +361,7 @@ const ContactList = () => {
                                                         전화 번호
                                                     </div>
                                                     <div className='col-8 row'>
-                                                        <input type='text' name='member_phone' placeholder={item.member_phone} value={modifyInput[index]?.member_phone || item.member_phone} onChange={(e) => onChangeHandle(e, index)}/>
+                                                        <input type='number' name='member_phone' placeholder={item.member_phone} value={modifyInput[index]?.member_phone || item.member_phone} onChange={(e) => onChangeHandle(e, index)}/>
                                                     </div>
                                                 </div>
                                                 <div className='row align-items-center mb-1'>

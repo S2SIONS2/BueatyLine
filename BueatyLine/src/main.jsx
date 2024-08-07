@@ -5,6 +5,7 @@ import Login from "./pages/Login.jsx";
 import Contact from './pages/Contact';
 import TotalChart from './pages/TotalChart';
 import Category from './pages/Category';
+import AddWork from "./pages/AddWork.jsx";
 import './index.css';
 import '../src/scss/style.scss';
 
@@ -16,6 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path='contact' element={<Contact />} />
         <Route path='totalchart' element={<TotalChart />} />
         <Route path='category' element={<Category />} />
+        <Route path='work' element={<AddWork />} />
         <Route index element={<Category />} /> {/* 기본 경로 */}
       </Route>
       {/* <Route path="*" /> */}

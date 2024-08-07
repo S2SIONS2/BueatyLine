@@ -1,0 +1,21 @@
+@use '../scss/style.scss';
+
+.AddWork{
+    .subTitle{
+        margin-bottom: 20px;
+    }
+
+    select{
+        height: 30px;
+        border: 1px solid style.$orange;
+        border-radius: 5px;
+    }
+    
+    button{
+        height: 30px;
+        background-color: style.$light-salmon;
+        border-color: style.$orange;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}

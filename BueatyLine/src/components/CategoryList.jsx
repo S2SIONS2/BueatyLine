@@ -106,7 +106,7 @@ const CategoryList = () => {
         }
     }
 
-    // 리스트 수정 모달
+    // 리스트 추가 모달
     const openListModal = (index) => {
         setListModal(listModal.map((modal, i) => (i === index ? !modal : modal)));
     };
