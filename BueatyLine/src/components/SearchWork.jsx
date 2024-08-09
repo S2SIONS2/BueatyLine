@@ -1,6 +1,8 @@
 // import { useState } from 'react'
 
-const SearchDate = ({searchValue, setSearchValue}) => {
+import { useEffect } from "react"
+
+const SearchDate = ({ setSearchValue, checkOS }) => {
 
     const onChangeInput = (e) => {
         setSearchValue(e.target.value)
@@ -8,6 +10,7 @@ const SearchDate = ({searchValue, setSearchValue}) => {
     // const checkWord = () => {
     //     searchBtn();
     // }
+    
 
     return(
         <div className="SearchDate">
@@ -25,17 +28,20 @@ const SearchDate = ({searchValue, setSearchValue}) => {
                     <option value={"name"}>이름</option>
                     <option value={"phone"}>전화번호</option>
                 </select>
-                <div className="row align-items-center">
-                    <input type="text" className="w-auto" value={searchValue} onChange={onChangeInput}/>
+                <div className="row align-items-center justify-content-between p-0 m-0 flex-grow-1 w-auto">
+                    <input type="text" className="w-auto flex-grow-1 me-2" onChange={onChangeInput}/>
                     <button type="button" className="btn w-auto">검색</button>
                 </div>
             </div>
             <div className="row align-items-center gap-2 mb-2">
-                {/* <button type="button">전화번호 동기화</button> */}
+                <button type="button" onClick={checkOS}>전화번호 동기화</button>
                 
-                <button type="button" className="btn w-auto">테이블 형식으로 보기</button>
-                <button type="button" className="btn w-auto">접기</button>
-                <button type="button" className="btn w-auto">미수금 내역</button>
+                {/* <button type="button" className="btn w-auto">테이블 형식으로 보기</button> */}
+                {/* <button type="button" className="btn w-auto">접기</button> */}
+                <label className="w-auto">
+                    <input type="checkbox" /> 미수금 내역
+                </label>
+                {/* <button type="button" className="btn w-auto">미수금 내역</button> */}
 
                 <button type="button" className="btn w-auto">등록</button>
                 <button type="button" className="btn w-auto">작업완료</button>

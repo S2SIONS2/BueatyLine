@@ -1,6 +1,7 @@
-const WorkList = ({list}) => {
+const WorkList = ({list, value}) => {
     return (
         <div className="WorkList">
+            {value}
             {
                 list.map((item, index) => (
                     <div key={index} className="row align-items-center">
