@@ -3,6 +3,8 @@ import WorkList from '../components/WorkList'
 import SearchWork from '../components/SearchWork';
 import { createContext, useEffect, useState } from 'react';
 import axios from 'axios'
+import NoData from '../components/NoData';
+import Loading from '../components/Loading';
 
 export const handleWorkList = createContext();
 
@@ -10,22 +12,34 @@ const AddWork = () => {
     const [list, setList] = useState([]) // api list
     const accessToken = localStorage.getItem('accessToken'); 
     const [searchValue, setSearchValue] = useState('');
+    const [checkList, setCheckList] = useState(null)
+    const [loading, setLoading] = useState(true);
+    // let hasList = false;
 
     // api 호출
     const apiList = async () => {
-        const url = '/api/work_api/getList';
-        const params = {
-            sfield : 'member_name',
-            skeyword : searchValue
-        }
-        const response = await axios.get(url, {
-            params: params,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
+        try{
+            const url = '/api/work_api/getList';
+            const params = {
+                sfield : 'member_name',
+                skeyword : searchValue
             }
-        })
+            const response = await axios.get(url, {
+                params: params,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+            setCheckList(response.data)
+            return response.data;
+        }
+        catch(error){
+            console.error(`error:`, error)
+        }
+        finally{
+            setLoading(false)
+        }
 
-        return response.data;
     }
     const getList = async () => {
         try{
@@ -84,7 +98,17 @@ const AddWork = () => {
         }
       };
 
-    
+    if (loading) {
+        return (
+            <Loading /> // 로딩 중 표시
+        )
+    }
+
+    if(!checkList){
+        return (
+            <NoData /> // data가 없을 때
+        )
+    }
 
     return (
         <handleWorkList.Provider value={{}}>

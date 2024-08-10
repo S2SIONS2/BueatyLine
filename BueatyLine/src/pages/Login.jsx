@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
     // 로그인 인풋 폼
     const [user, setUser] = useState({
-        userId: '',
-        userPw: ''
+        userId: 'user1',
+        userPw: 1111
     })
     const onChangeHandle = (e) => {
         const {name, value} = e.target
@@ -46,7 +46,7 @@ const Login = () => {
 
             handleLogin() // 로그인 후 화면 전환
         } else {
-            alert(loginResult.data.message)
+            alert('등록되지 않은 아이디이거나 아이디 혹은 비밀번호가 맞지 않습니다.')
         }
     }
 
