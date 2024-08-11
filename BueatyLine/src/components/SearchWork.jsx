@@ -1,7 +1,3 @@
-// import { useState } from 'react'
-
-import { useEffect } from "react"
-
 const SearchDate = ({ setSearchValue, checkOS }) => {
 
     const onChangeInput = (e) => {
