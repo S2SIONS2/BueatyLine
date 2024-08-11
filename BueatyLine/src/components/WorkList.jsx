@@ -1,17 +1,12 @@
 import { useEffect  } from "react"
 
 const WorkList = ({ list }) => {
-    // 작업 내역이 여러개일때
-    const checkCategoryArray = (list) => {
-        // const arr = list[0].categories_name
-        // console.log(arr)
-        console.log(list)
-    }
 
-    useEffect(() => {
-        checkCategoryArray(list)
-    }, [list])
-
+    // useEffect(() => {
+    //     list.map((item, index) => (
+            
+    //     ))
+    // }, [])
     return (
         <div className="WorkList">
             <div className="row align-items-center direction-column">
@@ -26,11 +21,25 @@ const WorkList = ({ list }) => {
                                 <span> {item.work_date} </span>
                             </summary>
                             <ul>
-                                <li>{item.categories_name} {item.cha_values}차</li>
-                                <li>{item.work_du_date}</li>
+                                <li>
+                                    <div> 
+                                        {item.categories_name.split(',').map((name, index) => (
+                                            <div key={index} className="row align-items-center">
+                                                <span className="w-auto">
+                                                    {index}. {name}
+                                                </span>
+                                                <span className="badge rounded-pill bg-info d-block ml-2 w-auto">
+                                                    {item.cha_values.split(',')[index]}차
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    
+                                    </li>
+                                {/* <li>{item.work_du_date}</li>
                                 <li>{item.idx_kmc_member}</li>
                                 <li>{item.work_price_completed}</li>
-                                <li>{item.work_price_completed}</li>
+                                <li>{item.work_price_completed}</li> */}
                             </ul>
                         </details>
                     </div>
