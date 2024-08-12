@@ -1,15 +1,25 @@
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAddressBook, faPen } from "@fortawesome/free-solid-svg-icons";
+import {  faPen } from "@fortawesome/free-solid-svg-icons";
 
 const WorkList = ({ list }) => {
+
+    // details 태그 버튼 컨트롤
+    const [openDetails, setOpenDetails] = useState(false)
+    const toggleDetails = () => {
+        setOpenDetails(!openDetails);
+      };
 
     return (
         <div className="WorkList">
             <div className="row align-items-center direction-column">
+            <button onClick={toggleDetails}>
+                {openDetails ? '리스트 닫기' : '리스트 열기'}
+            </button>
             {
                 list.map((item, index) => (
                     <div key={index} className="row align-items-center">
-                        <details>
+                        <details open={openDetails}>
                             <summary>
                                 <label>
                                     <input type="checkbox" /> {item.member_name}
