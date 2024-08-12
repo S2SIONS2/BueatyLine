@@ -83,6 +83,8 @@ input{
 button{
     background-color: transparent;
     border: none;
+    border-radius: 5px;
+
 }
 .btn_small{
     width: 70px !important;
@@ -104,6 +106,16 @@ button{
 .btn.btn-light{
     background-color: #ebecee;
     color:#222;
+}
+.modifyBtn{
+    background-color: transparent;
+    color: #ddd;
+    cursor: pointer;
+
+    &:hover{
+        color:#222;
+        background-color: transparent;
+    }
 }
 
 // class css

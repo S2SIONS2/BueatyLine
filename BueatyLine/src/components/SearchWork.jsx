@@ -19,8 +19,9 @@ const SearchDate = ({ setSearchValue, checkOS }) => {
                 <button type="button" className="btn w-auto text-center light-orange">이전달</button>
                 <button type="button" className="btn w-auto text-center light-orange">다음달</button>
             </div>
-            <div className="row align-items-center flex-nowrap gap-2 mb-2">
-                <select className="w-auto">
+            <div className="row align-items-center gap-2 m-0 mb-2">
+                <select>
+                    <option value={""}>분류</option>
                     <option value={"name"}>이름</option>
                     <option value={"phone"}>전화번호</option>
                 </select>
@@ -28,19 +29,6 @@ const SearchDate = ({ setSearchValue, checkOS }) => {
                     <input type="text" className="w-auto flex-grow-1 me-2" onChange={onChangeInput}/>
                     <button type="button" className="btn w-auto">검색</button>
                 </div>
-            </div>
-            <div className="row align-items-center gap-2 mb-2">
-                <button type="button" onClick={checkOS}>전화번호 동기화</button>
-                
-                {/* <button type="button" className="btn w-auto">테이블 형식으로 보기</button> */}
-                {/* <button type="button" className="btn w-auto">접기</button> */}
-                <label className="w-auto">
-                    <input type="checkbox" /> 미수금 내역
-                </label>
-                {/* <button type="button" className="btn w-auto">미수금 내역</button> */}
-
-                <button type="button" className="btn w-auto">등록</button>
-                <button type="button" className="btn w-auto">작업완료</button>
             </div>
         </div>
     )

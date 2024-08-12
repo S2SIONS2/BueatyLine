@@ -114,15 +114,15 @@ const AddWork = () => {
         <handleWorkList.Provider value={{}}>
             <div className='AddWork'>
                 <div className='subTitle'>Work List</div>
-                <section>
+                <button className='w-100 mb-3' type="button" onClick={checkOS}>전화번호 동기화</button>
+                <section className='p-2 mb-3'>
                     <SearchWork            
                         setSearchValue={setSearchValue}
-                        checkOS={checkOS}
                         // onChange={onChangeInput}
                         // onClick={checkWork()}
                     />
                 </section>
-                <section>
+                <section className='p-2'>
                     <WorkList 
                         list={list}
                         value={searchValue}

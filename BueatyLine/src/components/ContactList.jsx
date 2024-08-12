@@ -345,7 +345,7 @@ const ContactList = () => {
                                                         그룹
                                                     </div>
                                                     <div className='col-8 row'>
-                                                        <input type='text' name='member_group' placeholder={item.member_group} value={modifyInput[index]?.member_group || item.member_group} onChange={(e) => onChangeHandle(e, index)}/>
+                                                        <input type='text' name='member_group' placeholder={item.member_group} value={modifyInput[index]?.member_group} onChange={(e) => onChangeHandle(e, index)}/>
                                                     </div>
                                                 </div>
                                                 <div className='row align-items-center mb-1'>
@@ -353,7 +353,7 @@ const ContactList = () => {
                                                         이름
                                                     </div>
                                                     <div className='col-8 row'>
-                                                        <input type='text' name='member_name' placeholder={item.member_name} value={modifyInput[index]?.member_name || item.member_name} onChange={(e) => onChangeHandle(e, index)}/>
+                                                        <input type='text' name='member_name' placeholder={item.member_name} value={modifyInput[index]?.member_name} onChange={(e) => onChangeHandle(e, index)}/>
                                                     </div>
                                                 </div>
                                                 <div className='row align-items-center mb-1'>
@@ -361,7 +361,7 @@ const ContactList = () => {
                                                         전화 번호
                                                     </div>
                                                     <div className='col-8 row'>
-                                                        <input type='number' name='member_phone' placeholder={item.member_phone} value={modifyInput[index]?.member_phone || item.member_phone} onChange={(e) => onChangeHandle(e, index)}/>
+                                                        <input type='number' name='member_phone' placeholder={item.member_phone} value={modifyInput[index]?.member_phone} onChange={(e) => onChangeHandle(e, index)}/>
                                                     </div>
                                                 </div>
                                                 <div className='row align-items-center mb-1'>
@@ -369,7 +369,7 @@ const ContactList = () => {
                                                         메모
                                                     </div>
                                                     <div className='col-8 row'>
-                                                        <input type='text' name='member_memo' placeholder={item.member_memo} value={modifyInput[index]?.member_memo || item.member_memo} onChange={(e) => onChangeHandle(e, index)}/>
+                                                        <input type='text' name='member_memo' placeholder={item.member_memo} value={modifyInput[index]?.member_memo} onChange={(e) => onChangeHandle(e, index)}/>
                                                     </div>
                                                 </div>
                                                 <div className='row align-items-cneter mb-1'>

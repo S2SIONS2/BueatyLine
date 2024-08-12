@@ -13,7 +13,7 @@ const CategoryList = () => {
         category_name: '',
         category_price: ''
     });
-    const [modifyInput, setModifyInput] = useState({}); // 수정 팝업 input value 처리
+    const [modifyInput, setModifyInput] = useState(''); // 수정 팝업 input value 처리
     const accessToken = localStorage.getItem('accessToken'); // 인증용 accessToken값 가져오기
     
     
@@ -24,7 +24,7 @@ const CategoryList = () => {
             ...categoryInput,
             [name]: value
         });
-    }
+    };
 
     // api list 호출
     const apiList = async () => {
@@ -266,7 +266,7 @@ const CategoryList = () => {
                                             금액
                                         </div>
                                         <div className='col-9 row p-0'>
-                                            <input type='number' name='category_price' value={categoryInput.category_price} onChange={onChangeValue}/>
+                                            <input type='number' name='category_price' value={categoryInput.category_price || ''} min={0} onChange={onChangeValue}/>
                                         </div>
                                     </div>
                                 </div>
@@ -309,7 +309,7 @@ const CategoryList = () => {
                                                             시술명
                                                         </div>
                                                         <div className='col-9 row'>
-                                                            <input type='text' name='category_name' placeholder={item.category_name} value={modifyInput[index]?.category_name || item.category_name} onChange={(e) => onChangeHandle(e, index)}/>
+                                                            <input type='text' name='category_name' placeholder={item.category_name} value={modifyInput[index]?.category_name || ''} onChange={(e) => onChangeHandle(e, index)}/>
                                                         </div>
                                                     </div>
                                                     <div className='row align-items-center'>
@@ -317,13 +317,13 @@ const CategoryList = () => {
                                                             금액
                                                         </div>
                                                         <div className='col-9 row'>
-                                                            <input type='number' name='category_price' placeholder={item.category_price} value={modifyInput[index]?.category_price || item.category_price} onChange={(e) => onChangeHandle(e, index)}/>
+                                                            <input type='number' name='category_price' placeholder={item.category_price} value={modifyInput[index]?.category_price || item.category_price || ''} onChange={(e) => onChangeHandle(e, index)}/>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className='btn_wrap'>
-                                                <button type='button' className='btn btn-point-dark' onClick={() => confirmModifyValue(index)}>확인</button>
+                                                <button type='button' className='btn btn-point-dark' onClick={() => confirmModifyValue(index)}>수정</button>
                                                 <button type='button' className='btn btn-light' onClick={() => closeListModal(index)}>닫기</button>
                                             </div>
                                         </div>

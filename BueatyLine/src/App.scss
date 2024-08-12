@@ -61,3 +61,11 @@ a{
     color: #787878;
     font-size: 16px;
 }
+
+summary {
+    list-style-type: none;
+    position: relative;
+}
+summary::-webkit-details-marker { /* Safari 브라우저용 사용자 정의 스타일 */
+    display: none;
+}
