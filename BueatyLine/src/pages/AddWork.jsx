@@ -15,7 +15,9 @@ const AddWork = () => {
     const [checkList, setCheckList] = useState(null) // 리스트 존재 여부 체크
     const [loading, setLoading] = useState(true); // 로딩중인지 체크
     const [selectOption, setSelectOption] = useState('') // 검색용 selectOption
-    const [sfield, setSfield] = useState('member_name')
+    const [sfield, setSfield] = useState('member_name') // sfield 초기화
+    const [sdate, setSdate] = useState()
+    const [edate, setEdate] = useState()
 
     // api 호출
     const apiList = async () => {
@@ -23,7 +25,9 @@ const AddWork = () => {
             const url = '/api/work_api/getList';
             const params = {
                 sfield : sfield,
-                skeyword : searchValue
+                skeyword : searchValue,
+                sdate: sdate,
+                edate: edate
             }
             const response = await axios.get(url, {
                 params: params,
@@ -55,6 +59,7 @@ const AddWork = () => {
     }, [])
 
     // api 검색
+    // input에 값 입력
     const searchBtn = async () => {
         try{
             const data = await apiList();
@@ -66,9 +71,10 @@ const AddWork = () => {
             console.error(`Error Occured: `, error);
         }
     }
-    // const checkWord = () => {
-    //     searchBtn();
-    // }
+    const checkWord = () => {
+        // searchBtn();
+        alert('1')
+    }
     useEffect(() => {
         const searchApi = async () => {
             try {
@@ -85,25 +91,50 @@ const AddWork = () => {
         searchApi()
     }, [searchValue])
 
-    // select 분류
+    // 날짜 분류 검색
+    const [prevDate, setPrevDate] = useState(''); // 자식 컴포넌트 이전달 state
+    const [nextDate, setNextDate] = useState(''); // 자식 컴포넌트 다음달 state
+
+    const onHandlePrevDate = (data) => {
+        setPrevDate(data)
+        setEdate(data)
+    }
+    const onHandleNextDate = (data) => {
+        setNextDate(data)
+        setEdate(data)
+    }
+    
+    useEffect(() => {
+        const searchDate = async () => {
+            try {
+                const data = await apiList()
+                const listFromApi = data.list;
+                setList(listFromApi)
+                getList(sdate, edate)
+            }catch(error){
+                console.error(`기간 검색 중 오류 발생: `,error)
+            }
+        }
+        searchDate();
+    },[prevDate, nextDate])
+
+    // select 분류 검색
     const onChangeOption = (e) => {
         setSelectOption(e.target.value)
     }
     const getSelectOption = () => {
         if(selectOption == "name"){
-            console.log('name')
-            setSfield('mamber_name')
+            setSfield('member_name')
         }
 
         if(selectOption == "phone"){
-            console.log('phone')
             setSfield('member_phone')
         }
     }
 
     useEffect(() => {
         getSelectOption()
-    })
+    }, [selectOption])
 
     //안드로이드 앱에서 전화번호 가져옴
     const checkOS = () => {
@@ -137,10 +168,14 @@ const AddWork = () => {
                 <button className='w-100 mb-3' type="button" onClick={checkOS}>전화번호 동기화</button>
                 <section className='p-2 mb-3'>
                     <SearchWork            
+                        onPrevDate={onHandlePrevDate}
+                        onNextDate={onHandleNextDate}
                         setSearchValue={setSearchValue}
                         onChangeOption={onChangeOption}
                         selectOption={selectOption}
-                        // onClick={checkWork()}
+                        setSdate={setSdate}
+                        setEdate={setEdate}
+                        checkWord={checkWord}
                     />
                 </section>
                 <section className='p-2'>

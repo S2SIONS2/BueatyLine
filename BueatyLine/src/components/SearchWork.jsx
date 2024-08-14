@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const SearchDate = ({ setSearchValue, selectOption ,onChangeOption }) => {
+const SearchDate = ({ onPrevDate, onNextDate, setSearchValue, selectOption ,onChangeOption, setSdate, setEdate, checkWord }) => {
     const [pivotDate, setPivotDate] = useState(new Date()); // 현재 시간
     const [prevDate, setPrevDate] = useState(''); // 이전달 state
     const [nextDate, setNextDate] = useState(''); // 다음달 state
@@ -27,6 +27,11 @@ const SearchDate = ({ setSearchValue, selectOption ,onChangeOption }) => {
         setPivotDate(newPivotDate);
         setPrevDate(formatDate(newPivotDate));
         setNextDate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0)));
+        // 부모에 값 전달
+        onPrevDate(newPivotDate) 
+        onNextDate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0))) 
+        setSdate(newPivotDate)
+        setEdate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0)))
     }
     // 다음 달 버튼 클릭 시
     const onHandleNext = () => {
@@ -34,11 +39,12 @@ const SearchDate = ({ setSearchValue, selectOption ,onChangeOption }) => {
         setPivotDate(newPivotDate);
         setPrevDate(formatDate(newPivotDate));
         setNextDate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0)));
+        // 부모에 값 전달
+        onPrevDate(newPivotDate) 
+        onNextDate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0)))
+        setSdate(newPivotDate)
+        setEdate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0)))
     }
-
-    useEffect(() => {
-
-    }, [pivotDate]);
 
     // 검색 input onChange 함수
     const onChangeInput = (e) => {
@@ -58,13 +64,12 @@ const SearchDate = ({ setSearchValue, selectOption ,onChangeOption }) => {
             </div>
             <div className="row align-items-center gap-2 m-0">
                 <select value={selectOption} onChange={onChangeOption}>
-                    <option value={""}>분류</option>
                     <option value={"name"}>이름</option>
                     <option value={"phone"}>전화번호</option>
                 </select>
                 <div className="row align-items-center justify-content-between p-0 m-0 flex-grow-1 w-auto">
                     <input type="text" className="w-auto flex-grow-1 me-2 mb-2" onChange={onChangeInput} />
-                    <button type="button" className="btn w-auto mb-2">검색</button>
+                    <button type="button" className="btn w-auto mb-2" onClick={checkWord}>검색</button>
                 </div>
             </div>
         </div>
