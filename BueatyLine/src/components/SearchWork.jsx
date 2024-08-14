@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const SearchDate = ({ setSearchValue }) => {
+const SearchDate = ({ setSearchValue, selectOption ,onChangeOption }) => {
     const [pivotDate, setPivotDate] = useState(new Date()); // 현재 시간
     const [prevDate, setPrevDate] = useState(''); // 이전달 state
     const [nextDate, setNextDate] = useState(''); // 다음달 state
@@ -37,7 +37,7 @@ const SearchDate = ({ setSearchValue }) => {
     }
 
     useEffect(() => {
-        
+
     }, [pivotDate]);
 
     // 검색 input onChange 함수
@@ -57,7 +57,7 @@ const SearchDate = ({ setSearchValue }) => {
                 <button type="button" className="btn w-auto text-center light-orange" onClick={onHandleNext}>다음달</button>
             </div>
             <div className="row align-items-center gap-2 m-0">
-                <select>
+                <select value={selectOption} onChange={onChangeOption}>
                     <option value={""}>분류</option>
                     <option value={"name"}>이름</option>
                     <option value={"phone"}>전화번호</option>

@@ -10,17 +10,19 @@ export const handleWorkList = createContext();
 
 const AddWork = () => {
     const [list, setList] = useState([]) // api list
-    const accessToken = localStorage.getItem('accessToken'); 
-    const [searchValue, setSearchValue] = useState('');
-    const [checkList, setCheckList] = useState(null)
-    const [loading, setLoading] = useState(true);
+    const accessToken = localStorage.getItem('accessToken'); // api 인가용 aceessToken값
+    const [searchValue, setSearchValue] = useState(''); // 검색 input 값
+    const [checkList, setCheckList] = useState(null) // 리스트 존재 여부 체크
+    const [loading, setLoading] = useState(true); // 로딩중인지 체크
+    const [selectOption, setSelectOption] = useState('') // 검색용 selectOption
+    const [sfield, setSfield] = useState('member_name')
 
     // api 호출
     const apiList = async () => {
         try{
             const url = '/api/work_api/getList';
             const params = {
-                sfield : 'member_name',
+                sfield : sfield,
                 skeyword : searchValue
             }
             const response = await axios.get(url, {
@@ -38,7 +40,6 @@ const AddWork = () => {
         finally{
             setLoading(false)
         }
-
     }
     const getList = async () => {
         try{
@@ -84,6 +85,26 @@ const AddWork = () => {
         searchApi()
     }, [searchValue])
 
+    // select 분류
+    const onChangeOption = (e) => {
+        setSelectOption(e.target.value)
+    }
+    const getSelectOption = () => {
+        if(selectOption == "name"){
+            console.log('name')
+            setSfield('mamber_name')
+        }
+
+        if(selectOption == "phone"){
+            console.log('phone')
+            setSfield('member_phone')
+        }
+    }
+
+    useEffect(() => {
+        getSelectOption()
+    })
+
     //안드로이드 앱에서 전화번호 가져옴
     const checkOS = () => {
         const isMobile = /iPhone|Android/i.test(navigator.userAgent);
@@ -117,7 +138,8 @@ const AddWork = () => {
                 <section className='p-2 mb-3'>
                     <SearchWork            
                         setSearchValue={setSearchValue}
-                        // onChange={onChangeInput}
+                        onChangeOption={onChangeOption}
+                        selectOption={selectOption}
                         // onClick={checkWork()}
                     />
                 </section>
