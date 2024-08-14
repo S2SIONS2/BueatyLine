@@ -24,7 +24,7 @@ const WorkList = ({ list }) => {
             </div>
 
             <div className="row align-items-center direction-column m-0 p-0">
-            <button onClick={toggleDetails} className="m-0 rounded-0">
+            <button onClick={toggleDetails} className="m-0 pt-2 pb-2 rounded-0">
                 {openDetails ? '리스트 닫기' : '리스트 열기'}
             </button>
             {
@@ -35,7 +35,11 @@ const WorkList = ({ list }) => {
                                 <div className="row align-items-center justify-content-between">
                                     <div className="row align-items-center w-auto">
                                         <span className="w-auto text-muted"><FontAwesomeIcon icon={faChevronDown} /></span>
-                                        <span className="w-auto p-0">{item.member_name}</span>
+                                        <span className="w-auto p-0">
+                                            <label>
+                                                <input type="checkbox" /> {item.member_name}
+                                            </label>
+                                        </span>
                                         <span className="w-auto"> {item.work_date} </span>
                                     </div>
                                     <button className='modifyBtn bg-transparent modifyBtn w-auto'>

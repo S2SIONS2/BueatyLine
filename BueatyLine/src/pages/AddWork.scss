@@ -13,11 +13,14 @@
     }
     
     button{
-        height: 30px;
         background-color: style.$light-salmon;
         border-color: style.$orange;
         padding-top: 0;
         padding-bottom: 0;
+
+        &:hover{
+            background-color: style.$light-salmon;
+        }
     }
 
     section{

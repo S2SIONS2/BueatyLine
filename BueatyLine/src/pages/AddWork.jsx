@@ -14,7 +14,6 @@ const AddWork = () => {
     const [searchValue, setSearchValue] = useState('');
     const [checkList, setCheckList] = useState(null)
     const [loading, setLoading] = useState(true);
-    // let hasList = false;
 
     // api 호출
     const apiList = async () => {
