@@ -1,19 +1,34 @@
 import { useEffect, useState } from 'react';
 
-const SearchDate = ({ onPrevDate, onNextDate, setSearchValue, selectOption ,onChangeOption, setSdate, setEdate, checkWord }) => {
-    const [pivotDate, setPivotDate] = useState(new Date()); // 현재 시간
+const SearchDate = ({ 
+        setSearchValue, // 검색 할 input value 값 부모에 전달
+        onPrevDate, // 이전달 버튼 클릭 시 현재 pivotData value를 부모에 전달
+        onNextDate, // 다음달 버튼 클릭 시 현재 pivotData value를 부모에 전달
+        selectOption, // select option값 부모에 전달 
+        onChangeOption, // Select value onChangeHandling
+        setSdate, // api 검색을 위한 date(날짜) 조건 중 시작날
+        setEdate, // api 검색을 위한 date(날짜) 조건 중 마지막날
+        checkWord // 검색 버튼이 클릭될 때 부모로 전달
+    }) => {
+    const [pivotDate, setPivotDate] = useState(new Date()); // 현재 날짜
     const [prevDate, setPrevDate] = useState(''); // 이전달 state
     const [nextDate, setNextDate] = useState(''); // 다음달 state
 
     // input value onChange 함수
     const onChangePrev = (e) => {
-        setPrevDate(e.target.value);
+        const targetValue = e.target.value
+        setPrevDate(targetValue);
+        onPrevDate(targetValue) 
+        setSdate(targetValue)
     }
     const onChangeNext = (e) => {
-        setNextDate(e.target.value);
+        const targetValue = e.target.value
+        setNextDate(targetValue);
+        onNextDate(targetValue)
+        setEdate(targetValue)
     }
 
-    // value 'yyyy-mm-dd' 형식으로 변경 함수
+    // value 'yyyy-mm-dd' 형식으로 변경
     const formatDate = (date) => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -28,7 +43,7 @@ const SearchDate = ({ onPrevDate, onNextDate, setSearchValue, selectOption ,onCh
         setPrevDate(formatDate(newPivotDate));
         setNextDate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0)));
         // 부모에 값 전달
-        onPrevDate(newPivotDate) 
+        onPrevDate(formatDate(newPivotDate)) 
         onNextDate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0))) 
         setSdate(newPivotDate)
         setEdate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0)))
@@ -40,7 +55,7 @@ const SearchDate = ({ onPrevDate, onNextDate, setSearchValue, selectOption ,onCh
         setPrevDate(formatDate(newPivotDate));
         setNextDate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0)));
         // 부모에 값 전달
-        onPrevDate(newPivotDate) 
+        onPrevDate(formatDate(newPivotDate)) 
         onNextDate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0)))
         setSdate(newPivotDate)
         setEdate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0)))

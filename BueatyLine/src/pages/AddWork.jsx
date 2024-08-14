@@ -58,36 +58,20 @@ const AddWork = () => {
         getList()
     }, [])
 
-    // api 검색
-    // input에 값 입력
-    const searchBtn = async () => {
-        try{
+    // api 검색   
+    const searchApi = async () => {
+        try {
             const data = await apiList();
-            const searchedList = data.list;
+            const searchedList = data.list
             if(searchedList.length > 0){
                 setList(searchedList)
+                getList(searchValue)
             }
-        }catch(error){
-            console.error(`Error Occured: `, error);
+        } catch (error) {
+            console.error(`Error list:`, error);
         }
-    }
-    const checkWord = () => {
-        // searchBtn();
-        alert('1')
     }
     useEffect(() => {
-        const searchApi = async () => {
-            try {
-                const data = await apiList();
-                const searchedList = data.list
-                if(searchedList.length > 0){
-                    setList(searchedList)
-                    getList(searchValue)
-                }
-            } catch (error) {
-                console.error(`Error list:`, error);
-            }
-        }
         searchApi()
     }, [searchValue])
 
@@ -97,24 +81,23 @@ const AddWork = () => {
 
     const onHandlePrevDate = (data) => {
         setPrevDate(data)
-        setEdate(data)
+        setSdate(data)
     }
     const onHandleNextDate = (data) => {
         setNextDate(data)
         setEdate(data)
     }
-    
-    useEffect(() => {
-        const searchDate = async () => {
-            try {
-                const data = await apiList()
-                const listFromApi = data.list;
-                setList(listFromApi)
-                getList(sdate, edate)
-            }catch(error){
-                console.error(`기간 검색 중 오류 발생: `,error)
-            }
+    const searchDate = async () => {
+        try {
+            const data = await apiList()
+            const listFromApi = data.list;
+            setList(listFromApi)
+            getList(sdate, edate)
+        }catch(error){
+            console.error(`기간 검색 중 오류 발생: `,error)
         }
+    }
+    useEffect(() => {   
         searchDate();
     },[prevDate, nextDate])
 
@@ -131,10 +114,22 @@ const AddWork = () => {
             setSfield('member_phone')
         }
     }
-
     useEffect(() => {
         getSelectOption()
     }, [selectOption])
+
+    // 검색 버튼 클릭 시 
+    const checkWord = () => {
+        if(prevDate >= nextDate){
+            return(
+                alert('시작 일은 종료 일보다 크거나 같을 수 없습니다.')
+            )
+        }
+        searchApi() // 검색어 입력 확인
+        searchDate() // 변경된 날짜 확인
+        getSelectOption() // 셀렉트 타입 확인
+        alert('1')
+    }
 
     //안드로이드 앱에서 전화번호 가져옴
     const checkOS = () => {
