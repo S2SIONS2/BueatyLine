@@ -9,25 +9,29 @@ import Loading from '../components/Loading';
 export const handleWorkList = createContext();
 
 const AddWork = () => {
-    const [list, setList] = useState([]) // api list
-    const accessToken = localStorage.getItem('accessToken'); // api 인가용 aceessToken값
-    const [searchValue, setSearchValue] = useState(''); // 검색 input 값
     const [checkList, setCheckList] = useState(null) // 리스트 존재 여부 체크
     const [loading, setLoading] = useState(true); // 로딩중인지 체크
-    const [selectOption, setSelectOption] = useState('') // 검색용 selectOption
+
+    const [list, setList] = useState([]) // api list를 담을 state
+    const accessToken = localStorage.getItem('accessToken'); // api 인가용 aceessToken값
+    const [sdate, setSdate] = useState() // api 검색 용 시작일
+    const [edate, setEdate] = useState() // api 검색 용 마지막일
+    const [selectOption, setSelectOption] = useState('') // 검색용 select Option
+    const [searchValue, setSearchValue] = useState(''); // 검색 input 값
     const [sfield, setSfield] = useState('member_name') // sfield 초기화
-    const [sdate, setSdate] = useState()
-    const [edate, setEdate] = useState()
 
     // api 호출
-    const apiList = async () => {
+    const apiList = async (isChecked=false) => {
         try{
             const url = '/api/work_api/getList';
-            const params = {
+            let params = {
                 sfield : sfield,
                 skeyword : searchValue,
                 sdate: sdate,
-                edate: edate
+                edate: edate,
+            }
+            if(isChecked === true) {
+                params.work_price_completed = 0
             }
             const response = await axios.get(url, {
                 params: params,
@@ -45,19 +49,16 @@ const AddWork = () => {
             setLoading(false)
         }
     }
-    const getList = async () => {
+    const getList = async (isChecked) => {
         try{
-            const data = await apiList();
+            const data = await apiList(isChecked);
             const listFromApi = data.list;
             setList(listFromApi)
         }catch(error){
             console.error(`Error List: `, error);
         }
     }
-    useEffect(() => {
-        getList()
-    }, [])
-
+  
     // api 검색   
     const searchApi = async () => {
         try {
@@ -118,6 +119,7 @@ const AddWork = () => {
         getSelectOption()
     }, [selectOption])
 
+
     // 검색 버튼 클릭 시 
     const checkWord = () => {
         if(prevDate >= nextDate){
@@ -128,8 +130,18 @@ const AddWork = () => {
         searchApi() // 검색어 입력 확인
         searchDate() // 변경된 날짜 확인
         getSelectOption() // 셀렉트 타입 확인
-        alert('1')
     }
+
+    // checkbox 리스트 보기
+    const [isChecked, setIsChecked] = useState(false) // 미수금내역 체크 확인
+    const checkInputOnTab = (data) => {
+        setIsChecked(data)
+        getList(data)
+    }
+    
+    // useEffect(() => {
+    //     getList(isChecked)
+    // }, [isChecked])
 
     //안드로이드 앱에서 전화번호 가져옴
     const checkOS = () => {
@@ -177,6 +189,7 @@ const AddWork = () => {
                     <WorkList 
                         list={list}
                         value={searchValue}
+                        checkInputOnTab={checkInputOnTab}
                     />
                 </section>
             </div>

@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
-const WorkList = ({ list }) => {
+const WorkList = ({ list, checkInputOnTab }) => {
 
     // details 태그 버튼 컨트롤
     const [openDetails, setOpenDetails] = useState(true)
@@ -11,11 +11,31 @@ const WorkList = ({ list }) => {
         setOpenDetails(!openDetails);
       };
 
+    // 미수금 내역 검색
+    const [onTab, setOnTab] = useState(false) // 기본값, 외상일 때
+
+    const onChangeCheck = (e) => {
+        setOnTab(e.target.checked)
+    }
+    const checkInput = () => {
+        if(onTab){
+            checkInputOnTab(true)
+        }
+        if(!onTab){
+            checkInputOnTab(false)
+        }
+    }
+
+    useEffect(() => {
+        checkInput()
+    }, [onTab])
+    
+
     return (
         <div className="WorkList p-0 m-0">
             <div className="row align-items-center justify-content-between gap-2 m-0 mb-2">               
                 <label className="w-auto m-0 p-0">
-                    <input type="checkbox" /> 미수금 내역
+                    <input type="checkbox" checked={onTab} onChange={onChangeCheck}/> 미수금 내역
                 </label>
                 <div className="row align-items-center w-auto">
                     <button type="button" className="btn w-auto me-2">등록</button>

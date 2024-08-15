@@ -70,3 +70,9 @@ summary {
 summary::-webkit-details-marker { /* Safari 브라우저용 사용자 정의 스타일 */
     display: none;
 }
+label:has(input){
+    cursor: pointer;
+}
+input[type='checkbox']{
+    cursor: pointer;
+}
