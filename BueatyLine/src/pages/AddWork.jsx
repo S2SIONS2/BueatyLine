@@ -21,7 +21,8 @@ const AddWork = () => {
     const [sfield, setSfield] = useState('member_name') // sfield 초기화
 
     // api 호출
-    const apiList = async (isChecked=false) => {
+    const apiList = async () => {
+        
         try{
             const url = '/api/work_api/getList';
             let params = {
@@ -49,9 +50,9 @@ const AddWork = () => {
             setLoading(false)
         }
     }
-    const getList = async (isChecked) => {
+    const getList = async () => {
         try{
-            const data = await apiList(isChecked);
+            const data = await apiList();
             const listFromApi = data.list;
             setList(listFromApi)
         }catch(error){
@@ -61,15 +62,14 @@ const AddWork = () => {
   
     // api 검색   
     const searchApi = async () => {
-        try {
+        try{
             const data = await apiList();
-            const searchedList = data.list
-            if(searchedList.length > 0){
-                setList(searchedList)
-                getList(searchValue)
+            if(data.totalCount > 0){
+                const listFromApi = data.list;
+                setList(listFromApi)
             }
-        } catch (error) {
-            console.error(`Error list:`, error);
+        }catch(error){
+            console.error(`Error List: `, error);
         }
     }
     useEffect(() => {
@@ -88,19 +88,10 @@ const AddWork = () => {
         setNextDate(data)
         setEdate(data)
     }
-    const searchDate = async () => {
-        try {
-            const data = await apiList()
-            const listFromApi = data.list;
-            setList(listFromApi)
-            getList(sdate, edate)
-        }catch(error){
-            console.error(`기간 검색 중 오류 발생: `,error)
-        }
-    }
-    useEffect(() => {   
-        searchDate();
-    },[prevDate, nextDate])
+
+    // useEffect(() => {   
+    //     getList();
+    // },[prevDate, nextDate])
 
     // select 분류 검색
     const onChangeOption = (e) => {
@@ -128,20 +119,20 @@ const AddWork = () => {
             )
         }
         searchApi() // 검색어 입력 확인
-        searchDate() // 변경된 날짜 확인
+        // searchDate() // 변경된 날짜 확인
         getSelectOption() // 셀렉트 타입 확인
+        getList()
     }
 
     // checkbox 리스트 보기
-    const [isChecked, setIsChecked] = useState(false) // 미수금내역 체크 확인
+    const [isChecked, setIsChecked] = useState(false) // 미수금내역 체크박스 확인
     const checkInputOnTab = (data) => {
         setIsChecked(data)
-        getList(data)
     }
-    
-    // useEffect(() => {
-    //     getList(isChecked)
-    // }, [isChecked])
+
+    useEffect(() => {
+        getList()
+    }, [prevDate, nextDate, isChecked])
 
     //안드로이드 앱에서 전화번호 가져옴
     const checkOS = () => {
@@ -190,6 +181,7 @@ const AddWork = () => {
                         list={list}
                         value={searchValue}
                         checkInputOnTab={checkInputOnTab}
+
                     />
                 </section>
             </div>

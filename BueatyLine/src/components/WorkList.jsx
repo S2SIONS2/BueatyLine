@@ -16,21 +16,9 @@ const WorkList = ({ list, checkInputOnTab }) => {
 
     const onChangeCheck = (e) => {
         setOnTab(e.target.checked)
+        checkInputOnTab(e.target.checked)
     }
-    const checkInput = () => {
-        if(onTab){
-            checkInputOnTab(true)
-        }
-        if(!onTab){
-            checkInputOnTab(false)
-        }
-    }
-
-    useEffect(() => {
-        checkInput()
-    }, [onTab])
     
-
     return (
         <div className="WorkList p-0 m-0">
             <div className="row align-items-center justify-content-between gap-2 m-0 mb-2">               
