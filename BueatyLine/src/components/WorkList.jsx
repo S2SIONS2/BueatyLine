@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import AddWorkList from '../pages/AddWorkList'
 
 const WorkList = ({ list, checkInputOnTab }) => {
 
@@ -26,8 +28,10 @@ const WorkList = ({ list, checkInputOnTab }) => {
                     <input type="checkbox" checked={onTab} onChange={onChangeCheck}/> 미수금 내역
                 </label>
                 <div className="row align-items-center w-auto">
-                    <button type="button" className="btn w-auto me-2">등록</button>
-                    <button type="button" className="btn w-auto">작업완료</button>
+                    <button type="button" className="btn w-auto me-2">
+                        <Link to="/app/addworklist">등록</Link>
+                    </button>
+                    <button type="button" className="btn w-auto" onClick={() => alert('개발 중입니다.')}>작업완료</button>
                 </div>
             </div>
 
