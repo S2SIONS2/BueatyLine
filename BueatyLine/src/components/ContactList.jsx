@@ -101,6 +101,9 @@ const ContactList = () => {
             })
             setModal(false)
         }
+        if(response.data.code === 300){
+            alert('이미 등록된 전화번호 입니다.')
+        }
     }
 
     // 연락처 입력값 변경
@@ -160,10 +163,10 @@ const ContactList = () => {
             alert('전화번호를 작성 해주세요.');
             return false;
         }
-        if(!member_memo){
-            alert('메모를 작성 해주세요.');
-            return false;
-        }
+        // if(!member_memo){
+        //     alert('메모를 작성 해주세요.');
+        //     return false;
+        // }
 
         // api 수정 성공 시
         if (response.data.code === 200){

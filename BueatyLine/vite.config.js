@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': { // 로그인
-        target: 'http://stage-kmc.daeho.shop:81/api2',
+        target: 'http://stage-kmc.daeho2.shop:81/api2',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
 

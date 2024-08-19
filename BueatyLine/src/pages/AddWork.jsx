@@ -89,10 +89,6 @@ const AddWork = () => {
         setEdate(data)
     }
 
-    // useEffect(() => {   
-    //     getList();
-    // },[prevDate, nextDate])
-
     // select 분류 검색
     const onChangeOption = (e) => {
         setSelectOption(e.target.value)
