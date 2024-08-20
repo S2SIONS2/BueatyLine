@@ -1,0 +1,35 @@
+@use '/src/scss/style.scss';
+
+.AddWorkList{
+
+    > div:not(.subTitle){
+        box-sizing: border-box;
+        padding: 20px 0px;
+    }
+    button{
+        border: 1px solid style.$orange;
+        background-color: #fff;
+        border-radius: 0;
+        flex: 1;
+        height: 40px;
+    }
+    button:first-child{
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+    button:last-child{
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+    button + button{
+        border-left: none;
+    }
+    .btn_wrap button{
+        border-radius: 5px;
+        border: 1px solid style.$orange;
+    }
+    button.active{
+        background-color: style.$orange;
+        color: #fff;
+    }
+}

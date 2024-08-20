@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const SearchDate = ({ 
         setSearchValue, // 검색 할 input value 값 부모에 전달
