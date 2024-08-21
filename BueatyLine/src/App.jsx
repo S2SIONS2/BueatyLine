@@ -13,6 +13,7 @@ function App() {
   const bodyRef = useRef(null);
   const navigate = useNavigate();
 
+  // 모바일 화면 사이즈 대응용
   useEffect(() => {
     const updateOuterWidth = () => {
       if (bodyRef.current) {
@@ -25,6 +26,7 @@ function App() {
     return () => window.removeEventListener('resize', updateOuterWidth);
   }, []);
 
+  // 로그아웃 함수
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
@@ -44,11 +46,12 @@ function App() {
       }
       handleLogout();
     } catch (error) {
-      console.error('Logout Error: ', error);
+      alert(error);
       handleLogout();
     }
   };
 
+  // 새 access토큰 요청
   const getAccessToken = async () => {
     try {
       const refreshToken = localStorage.getItem('refreshToken');
@@ -63,17 +66,19 @@ function App() {
       handleLogout();
     }
   };
-
+  // accessToken 발급을 위한 확인 함수
   const checkAccessToken = async () => {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
 
+    // access, refresh토큰이 둘 다 없을 때
     if (!accessToken && !refreshToken) {
       alert('로그인이 만료 되었습니다.')
       handleLogout();
       return;
     }
 
+    // access토큰이 있을 때
     if (accessToken) {
       try {
         const decodedToken = jwtDecode(accessToken);
@@ -100,6 +105,7 @@ function App() {
     await checkAccessToken();
   };
 
+  // url 화면 바뀔 때 마다 실행
   const location = useLocation();
   useEffect(() => {
     checkAfterEmpty();

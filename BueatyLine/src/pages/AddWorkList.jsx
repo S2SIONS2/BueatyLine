@@ -40,14 +40,18 @@ const AddWorkList = () => {
 
     // 작업 등록
     // 작업 날짜 
-    const [workDate, setWorkDate] = useState('');
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const [workDate, setWorkDate] = useState(formattedDate || '');
+
+    
     const changeWorkDate = (e) => {
         setWorkDate(e.target.value);
     };
 
     // 작업 내역
     // 작업 이름값
-    const [categoryName, setCategoryName] = useState('')
+    const [categoryName, setCategoryName] = useState([])
     const getCategoryName = (data) => {
         setCategoryName(data)
     }
@@ -63,7 +67,7 @@ const AddWorkList = () => {
     }
 
     // 작업 가격
-    const [price, setPrice] = useState()
+    const [price, setPrice] = useState([])
     const getCategoryPrice = (data) => {
         setPrice(data)
     }
@@ -151,17 +155,17 @@ const AddWorkList = () => {
         try{
             const url = '/api/work_api/add';
             let params = {
-                work_idx: '',
+                // work_idx: '',
                 work_date: workDate, // 작업 날짜
-                idx_kmc_member: customerName, // 고객이름
                 categories_name : categoryName, // 작업명
                 cha_values: chaValues, // 작업 차수
                 prices: price, // 가격
-                work_memo: '', // 메모
+                idx_kmc_member: customerName, // 고객이름
                 work_price_completed: payValue, // 결제 완료(1) / 미완료 표시(0) 
-                work_completed: workValue // 결제 완료(1) / 미완료 표시(0) 
+                work_completed: workValue, // 작업 완료(1) / 미완료 표시(0) 
+                work_memo: memo // 메모
             }
-            const response = await axios.get(url, {
+            const response = await axios.post(url, {
                 params: params,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -170,14 +174,24 @@ const AddWorkList = () => {
             console.log('날짜 ' + workDate)
             console.log('카테고리명 ' + categoryName)
             console.log('차수 ' + chaValues)
-            console.log(activePay)
-            console.log(response)
+            console.log('고객명 ' + customerName)
+            console.log('결제 완료 ' + payValue)
+            console.log('작업 완료 ' + workValue)
+            console.log('메모 ' + memo)
+            // 입력 성공 시
+            if(response.data.code === 200) {
+                <Link to="/app/work">뒤로가기</Link>
+            }
             return response.data;
         }catch(error){
             console.error(error);
             console.log('날짜 ' + workDate)
             console.log('카테고리명 ' + categoryName)
             console.log('차수 ' + chaValues)
+            console.log('고객명 ' + customerName)
+            console.log('결제 완료 ' + payValue)
+            console.log('작업 완료 ' + workValue)
+            console.log('메모 ' + memo)
         }
     }
 
@@ -222,19 +236,19 @@ const AddWorkList = () => {
                             </div>
                         ))}
                     </div>
-                    {
-                        isChecked &&
-                        <article className='mb-4'>
-                            <h6 className='fw-bold'>작업 내역 확인</h6>
-                            <div className='row align-items-center w-auto p-0 m-0'>
-                                <div className='w-auto p-0 me-1'>{categoryName}</div>
-                                <div className='badge rounded-pill bg-info d-block w-auto'>{chaValues}차</div>
-                            </div>
-                            <div>
-                                가격: {price}원
-                            </div>
-                        </article>
-                    }
+                        {
+                            isChecked &&
+                            <article className='mb-4'>
+                                <h6 className='fw-bold'>작업 내역 확인</h6>
+                                <div className='row align-items-center w-auto p-0 m-0'>
+                                    <div className='w-auto p-0 me-1'>{categoryName}</div>
+                                    <div className='badge rounded-pill bg-info d-block w-auto'>{chaValues}차</div>
+                                </div>
+                                <div>
+                                    가격: {price}원
+                                </div>
+                            </article>
+                        }
                 </section>
                 <section className='mb-4'>
                     <div className='row flex-direction-column'>

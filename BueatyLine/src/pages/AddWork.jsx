@@ -109,13 +109,17 @@ const AddWork = () => {
 
     // 검색 버튼 클릭 시 
     const checkWord = () => {
-        if(prevDate >= nextDate){
+        if(!prevDate){
             return(
-                alert('시작 일은 종료 일보다 크거나 같을 수 없습니다.')
+                alert('시작 일을 지정해 주세요.')
+            )
+        }
+        if(!nextDate){
+            return(
+                alert('종료 일을 지정해 주세요.')
             )
         }
         searchApi() // 검색어 입력 확인
-        // searchDate() // 변경된 날짜 확인
         getSelectOption() // 셀렉트 타입 확인
         getList()
     }
@@ -177,7 +181,7 @@ const AddWork = () => {
                         list={list}
                         value={searchValue}
                         checkInputOnTab={checkInputOnTab}
-
+                        getList={getList}
                     />
                 </section>
             </div>
