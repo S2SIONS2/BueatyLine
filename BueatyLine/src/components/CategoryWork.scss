@@ -1,9 +1,13 @@
 @use '/src/scss/style.scss';
 
+body:has(.CategoryWork){
+    // overflow: hidden;
+}
 .CategoryWork{
     width: 100%;
     height: 100%;
     background-color: #fff;
+    z-index: 9999;
 
     position: absolute;
     top: 5px;

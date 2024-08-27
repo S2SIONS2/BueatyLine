@@ -36,12 +36,12 @@ const WorkList = ({ list, checkInputOnTab, getList }) => {
     const accessToken = localStorage.getItem('accessToken'); // api 인가용 aceessToken값
     const modifyWork = async (index) => {
         try{
-            const url = '/api/work_api/add';
+            const url = '/api/work_api/updateCompleted';
             let param = {
-                work_idx: list[index].work_idx,
+                idx: [list[index].work_idx],
                 work_completed : 1
             }
-            const response = await axios.post(url, {
+            const response = await axios.get(url, {
                 params: param,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
