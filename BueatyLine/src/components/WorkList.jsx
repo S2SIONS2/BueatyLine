@@ -50,10 +50,10 @@ const WorkList = ({ list, checkInputOnTab, getList }) => {
             if(response.data.code === 200) {
                 getList()
             }
-            if(response.data.code === 400) {
-                alert(response.data.message)
-                // console.log(response.data.message)
-            }
+            // if(response.data.code === 400) {
+            //     alert()
+            //     // console.log(response.data.message)
+            // }
 
         }catch(error){
             console.error(error)
@@ -66,11 +66,12 @@ const WorkList = ({ list, checkInputOnTab, getList }) => {
     
     const completeWork = () => {
         isChecked.forEach((checked, index) => {
+            console.log(isChecked[index].checked)
             if(checked) {
                 modifyWork(index)
                 return ;
             }
-            else {
+            if(!checked || checked == null || isChecked == undefined) {
                 alert('변경할 작업 내역이 없습니다.')
             }
         })
@@ -83,8 +84,7 @@ const WorkList = ({ list, checkInputOnTab, getList }) => {
                     <input type="checkbox" checked={onTab} onChange={onChangeCheck}/> 미수금 내역
                 </label>
                 <div className="row align-items-center w-auto">
-                    <button type="button" className="btn w-auto me-2" onClick={() => alert('개발 중입니다.')}>
-                        {/* 등록 */}
+                    <button type="button" className="btn w-auto me-2">
                         <Link to="/app/addworklist">등록</Link>
                     </button>
                     <button type="button" className="btn w-auto" onClick={completeWork}>작업완료</button>

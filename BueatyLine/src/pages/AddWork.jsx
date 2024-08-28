@@ -22,7 +22,6 @@ const AddWork = () => {
 
     // api 호출
     const apiList = async () => {
-        
         try{
             const url = '/api/work_api/getList';
             let params = {

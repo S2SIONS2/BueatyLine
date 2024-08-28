@@ -13,6 +13,10 @@
         flex: 1;
         height: 40px;
     }
+    button.active{
+        background-color: style.$orange;
+        color: #fff;
+    }
     button:first-child{
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
@@ -24,12 +28,16 @@
     button + button{
         border-left: none;
     }
+    .checkWorkList >article >div >div{
+        min-height: 30px;
+    }
+    .checkWorkList button{
+        font-weight: bold;
+        border: 1px solid style.$orange;
+        border-radius: 5px;
+    }
     .btn_wrap button{
         border-radius: 5px;
         border: 1px solid style.$orange;
-    }
-    button.active{
-        background-color: style.$orange;
-        color: #fff;
     }
 }

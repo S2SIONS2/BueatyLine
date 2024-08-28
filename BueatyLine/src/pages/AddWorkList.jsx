@@ -1,5 +1,5 @@
 import './AddWorkList.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import CategoryWork from '../components/CategoryWork';
@@ -84,24 +84,6 @@ const AddWorkList = () => {
         setNextDate(data)
     }
 
-    // 작업 내역 변수 통합
-    const [workGroup, setWorkGroup] = useState([])
-    const setGroup = () => {
-        setWorkGroup((prev) => [
-            ...prev,
-            {
-                workName: categoryName || '',
-                workChaValue: chaValues || '',
-                workPrice: price || ''
-            }
-        ]);
-    };
-
-    useEffect(() => {
-        setGroup()
-        console.log(workGroup)
-    }, [categoryName, chaValues, price])
-
     // 작업(카테고리) 선택 체크
     const [isChecked, setIsChecked] = useState([]); // 체크 O/X 표시
     const [categoryModal, setCategoryModal] = useState([]); // 작업 선택을 위한 카테고리 모달
@@ -126,19 +108,30 @@ const AddWorkList = () => {
 
     useEffect(() => {
         checkCloseBtn(isChecked)
-        console.log(workGroup)
     }, [isChecked])
+
+    // 모달 생성 시 스크롤 탑 이동
+    const element = useRef();
+    const moveTop = () => {
+        element.current.scrollIntoView({behavor: 'smooth', block: "start"})
+    }
 
     // 고객명 입력
     const [customerName, setCustomerName] = useState(''); // 작업 한 고객 명 검색
     const [serachName, setSearchName] = useState([]); // 검색된 연락처 api 리스트
     const changeName = (e) => {
         setCustomerName(e.target.value);
+        setShow(true) // 하단 멤버 리스트 보이게
     };
     const getContactApi = async () => { // 연락처 api
         try {
             const url = '/api/member_api/getList'
+            let params = {
+                sfield : 'member_name',
+                skeyword : customerName,
+            }
             const response = await axios.post(url, {}, {
+                params: params,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
@@ -160,9 +153,11 @@ const AddWorkList = () => {
 
     // 이름 검색 후 확인
     const [customerIdx, setCustomerIdx] = useState()
+    const [show, setShow] = useState(true) // 멤버 리스트 show 관리
     const onClickName = (item) => {
         setCustomerIdx(item.member_idx)
-        
+        setShow(false) // 멤버 리스트 닫기
+        setCustomerName(item.member_name + ` [${item.member_phone}]`) // input에 클릭한 멤버 이름 보이게
     }
 
     useEffect(() => {
@@ -269,10 +264,27 @@ const AddWorkList = () => {
     useEffect(() => {
         getCategoryList(); // 작업 추가 api
     }, []);
-    
+
+    // 작업 내역 확인 리스트 삭제
+    const deleteWorkList = (index) => {
+        // 체크 표시 해제
+        const nameIndex = categoryName[index];
+        const listIndex = list.findIndex(item => item.category_name === nameIndex);
+        setIsChecked(prevState => {
+            const newState = [...prevState];
+            newState[listIndex] = false; // 해당 인덱스의 체크 상태를 false로 변경
+            return newState;
+        });
+
+        setCategoryNameIdx(categoryNameIdx.filter((_, i) => i !== index))
+        setCategoryName(categoryName.filter((_, i) => i !== index))
+        setChaValues(chaValues.filter((_, i) => i !== index))
+        setPrice(price.filter((_, i) => i !== index))
+        setNextDate(nextDate.filter((_, i) => i !== index))
+    }
     
     return (
-        <div className="AddWorkList position-relative">
+        <div className="AddWorkList position-relative" ref={element}>
             <div className='subTitle'>Work List 등록</div>
             <div>
                 <section className='mb-4'>
@@ -290,6 +302,7 @@ const AddWorkList = () => {
                                         className='me-2'
                                         checked={isChecked[index] || false}
                                         onChange={(e) => onChangeCheck(e, index)}
+                                        onClick={moveTop}
                                     /> {item.category_name}
                                 </label>
                                 {categoryModal[index] &&
@@ -311,10 +324,10 @@ const AddWorkList = () => {
                             </div>
                         ))}
                     </div>
-                    <div>
-                        <h6 className='fw-bold'>작업 내역 확인</h6>
-                        {
+                    <div className='checkWorkList'>
+                        {   categoryNameIdx.length != 0 &&
                             <article className='row align-items-center p-0 m-0'>
+                                <h6 className='fw-bold p-0'>작업 내역 확인</h6>
                                 <div className='row flex-column align-items-center p-0 col-5 ellipsis g-0'>
                                     {
                                         categoryName.map((item, index) => (
@@ -325,7 +338,7 @@ const AddWorkList = () => {
                                 <div className='row flex-column align-items-center p-0 col-2 g-0'>
                                     {
                                         chaValues.map((item, index) => (
-                                        <div key={index} className='badge rounded-pill bg-info w-auto text-nowrap row flex-nowrap m-0 mb-2'>{item}차</div>
+                                        <div key={index} className='w-auto text-nowrap row flex-nowrap m-0 mb-2'>{item}차</div>
                                     ))
                                     }
                                 </div>
@@ -338,8 +351,9 @@ const AddWorkList = () => {
                                 </div>
                                 <div className='row flex-column align-items-center justify-content-center p-0 col-1 g-0'>
                                     {
-                                        categoryName.map((index) => (
-                                            <button key={index} type='button' className='h-auto text-center mb-2'>X</button>
+                                        categoryName.map((_, index) => (
+                                            <button key={index} type='button' className='h-auto text-center mb-2' 
+                                                onClick={() => deleteWorkList(index)}>X</button>
                                         ))
                                     }
                                 </div>
@@ -354,7 +368,7 @@ const AddWorkList = () => {
                         <input type='search' value={customerName} onChange={changeName} />
                         <div className='position-absolute bg-white top-100 overflow-auto'>
                             {
-                                customerName && serachName.map((item, index) => (
+                                show && customerName && serachName.map((item, index) => (
                                     <div key={index} className='row align-items-center mt-2 border-bottom pt-1 pb-1 w-100 cursor-pointer' onClick={() => onClickName(item)} style={{cursor: 'pointer'}}>
                                         <div className='w-auto'>
                                             {item.member_name}

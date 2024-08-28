@@ -1,7 +1,7 @@
 @use '/src/scss/style.scss';
 
 body:has(.CategoryWork){
-    // overflow: hidden;
+    overflow: hidden;
 }
 .CategoryWork{
     width: 100%;

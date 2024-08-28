@@ -12,7 +12,7 @@
         border-radius: 5px;
     }
     
-    button{
+    :not(:has(.checkWorkListbutton)) button{
         background-color: style.$light-salmon;
         border-color: style.$orange;
         padding-top: 0;
