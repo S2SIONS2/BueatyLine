@@ -1,6 +1,7 @@
 @use '/src/scss/style.scss';
 
-.AddWorkList{
+.AddWorkList, 
+.ModifyWork{
 
     > div:not(.subTitle){
         box-sizing: border-box;

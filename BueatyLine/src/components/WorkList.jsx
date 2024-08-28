@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
@@ -32,7 +32,7 @@ const WorkList = ({ list, checkInputOnTab, getList }) => {
         });
     }
 
-    // 수정 api
+    // 작업 수정 api
     const accessToken = localStorage.getItem('accessToken'); // api 인가용 aceessToken값
     const modifyWork = async (index) => {
         try{
@@ -64,9 +64,9 @@ const WorkList = ({ list, checkInputOnTab, getList }) => {
         modifyWork()
     }, [])
     
+    // 작업 완료 버튼 클릭 시
     const completeWork = () => {
         isChecked.forEach((checked, index) => {
-            console.log(isChecked[index].checked)
             if(checked) {
                 modifyWork(index)
                 return ;
@@ -75,6 +75,13 @@ const WorkList = ({ list, checkInputOnTab, getList }) => {
                 alert('변경할 작업 내역이 없습니다.')
             }
         })
+    }
+
+    // 개별 리스트 버튼 클릭 시
+    const navigate = useNavigate()
+    const onMovePage = (item) => {
+        navigate("/app/modifywork", { state: { item } })
+        console.log(item)
     }
 
     return (
@@ -116,8 +123,7 @@ const WorkList = ({ list, checkInputOnTab, getList }) => {
                                             </span>
                                             <span className="w-auto"> {item.work_date} </span>
                                         </div>
-                                        <button className='modifyBtn bg-transparent modifyBtn w-auto' onClick={() => alert('개발 중 입니다.')}>
-                                            {/* {onClick={() => openListModal(index)} } */}
+                                        <button className='modifyBtn bg-transparent modifyBtn w-auto' onClick={() => onMovePage(item)}>
                                             <FontAwesomeIcon icon={faPen} /> 
                                         </button>
                                     </div>
@@ -167,8 +173,7 @@ const WorkList = ({ list, checkInputOnTab, getList }) => {
                                             </span>
                                             <span className="w-auto"> {item.work_date} </span>
                                         </div>
-                                        <button className='modifyBtn bg-transparent modifyBtn w-auto'>
-                                            {/* {onClick={() => openListModal(index)} } */}
+                                        <button className='modifyBtn bg-transparent modifyBtn w-auto' onClick={() => onMovePage(item)}>
                                             <FontAwesomeIcon icon={faPen} /> 
                                         </button>
                                     </div>

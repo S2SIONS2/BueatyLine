@@ -162,7 +162,7 @@ const AddWork = () => {
         <handleWorkList.Provider value={{}}>
             <div className='AddWork'>
                 <div className='subTitle'>Work List</div>
-                <button className='w-100 mb-3' type="button" onClick={checkOS}>전화번호 동기화</button>
+                <button className='w-100 mb-3 contactBtn' type="button" onClick={checkOS}>전화번호 동기화</button>
                 <section className='p-2 mb-3'>
                     <SearchWork            
                         onPrevDate={onHandlePrevDate}
