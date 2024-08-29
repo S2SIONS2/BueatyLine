@@ -1,0 +1,19 @@
+@use '/src/scss/style.scss';
+
+.TotalChart{
+    .subTitle{
+        margin-bottom: 20px;
+    }
+
+    .chartArea{
+        background-color: #fff;
+        border:2px solid style.$orange;
+        padding:10px;
+        box-sizing: border-box;
+        border-radius: 5px;
+
+        div{
+            border-color: style.$dark-purple !important;
+        }
+    }
+}

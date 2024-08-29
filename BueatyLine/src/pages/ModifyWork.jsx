@@ -135,9 +135,10 @@ const ModifyWork = () => {
                     'Authorization': `Bearer ${accessToken}`
                 }
             })
-            alert('수정이 완료 되었습니다.')
-            navigate('/app')
-            
+            // 코드 200을 타지 않아 임시적으로 했으나 추후 수정 예정
+            // alert('수정이 완료 되었습니다.')
+            // navigate('/app')
+
             if(response.data.code === 200){
                 alert('수정이 완료 되었습니다.')
                 navigate('/app')

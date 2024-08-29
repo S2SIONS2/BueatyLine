@@ -7,7 +7,6 @@ import { jwtDecode } from 'jwt-decode';
 
 const AddWorkList = () => {
     // 카테고리 api 호출
-
     const [list, setList] = useState([]); // api list를 담을 state
     const accessToken = localStorage.getItem('accessToken'); // api 인가용 aceessToken값
 
