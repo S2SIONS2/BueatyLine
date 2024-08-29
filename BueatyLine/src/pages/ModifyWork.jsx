@@ -136,12 +136,12 @@ const ModifyWork = () => {
                 }
             })
             // 코드 200을 타지 않아 임시적으로 했으나 추후 수정 예정
-            // alert('수정이 완료 되었습니다.')
-            // navigate('/app')
+            alert('수정이 완료 되었습니다.')
+            navigate('/app/work')
 
             if(response.data.code === 200){
                 alert('수정이 완료 되었습니다.')
-                navigate('/app')
+                navigate('/app/work')
             }
         }catch(error){
             console.error(error)
@@ -164,7 +164,7 @@ const ModifyWork = () => {
 
             if(response.data.code === 200){
                 alert('삭제가 완료 되었습니다.')
-                navigate('/app')
+                navigate('/app/work')
             }
         }catch(error) {
             console.error(error)

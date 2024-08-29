@@ -22,7 +22,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path='contact' element={<Contact />} />
         <Route path='work' element={<AddWork />} />
         <Route path='totalchart' element={<TotalChart />} />
-        <Route path='addwork' element={<AddWork />} />
         <Route path="addworklist" element={<AddWorkList />} />
         <Route path="modifywork" element={<ModifyWork />} />
       </Route>

@@ -5,14 +5,37 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 
 const TotalChart = () => {
     // 날짜 검색
-    const [preMonth, setPreMonth] = useState('');
-    const [nextMonth, setNextMonth] = useState('');
+    const [pivotDate, setPivotDate] = useState(new Date()); // 현재 날짜
+    const [preDate, setPreDate] = useState('');
+    const [nextDate, setNextDate] = useState('');
 
-    const changePreMonth = (e) => {
-        setPreMonth(e.target.value);
+    const changePreDate = (e) => {
+        setPreDate(e.target.value);
     }
-    const changeNextMonth = (e) => {
-        setNextMonth(e.target.value);
+    const changeNextDate = (e) => {
+        setNextDate(e.target.value);
+    }
+    // value 'yyyy-mm-dd' 형식으로 변경
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // 이전달 버튼 클릭 시
+    const onHandlePrev = () => {
+        const newPivotDate = new Date(pivotDate.getFullYear(), pivotDate.getMonth() - 1, 1);
+        setPivotDate(newPivotDate);
+        setPreDate(formatDate(newPivotDate));
+        setNextDate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0)));
+    }
+    // 다음 달 버튼 클릭 시
+    const onHandleNext = () => {
+        const newPivotDate = new Date(pivotDate.getFullYear(), pivotDate.getMonth() + 1, 1);
+        setPivotDate(newPivotDate);
+        setPreDate(formatDate(newPivotDate));
+        setNextDate(formatDate(new Date(newPivotDate.getFullYear(), newPivotDate.getMonth() + 1, 0)));
     }
 
     // 차트용 리스트 호출
@@ -24,8 +47,8 @@ const TotalChart = () => {
         try {
             const url = '/api/work_api/getChart';
             const params = {
-                sdate: preMonth,
-                edate: nextMonth
+                sdate: preDate,
+                edate: nextDate
             };
             const response = await axios.get(url, {
                 params: params,
@@ -47,30 +70,35 @@ const TotalChart = () => {
 
     useEffect(() => {
         getChartApi();
-    }, [preMonth, nextMonth]);
+    }, [preDate, nextDate]);
 
     return (
         <div className='TotalChart'>
-            <div className='subTitle'>통계 차트</div>
-            <section className='row align-items-center mb-3'>
+            <div className='subTitle'>Total Chart</div>
+            <section className='row align-items-center justify-content-center mb-3'>
                 <h6 className='fw-bold'>기간: </h6>
-                <div className='row align-items-center m-0 gap-1 flex-nowrap'>
-                    <input type='date' className='w-50' value={preMonth} onChange={changePreMonth} />
-                    <input type='date' className='w-50' value={nextMonth} onChange={changeNextMonth} />
+                <div className='row align-items-center justify-content-center m-0 gap-1 flex-nowrap mb-2'>
+                    <input type='date' className='col-5' value={preDate} onChange={changePreDate} />
+                    <span className="w-auto col-1"> ~ </span>
+                    <input type='date' className='col-5' value={nextDate} onChange={changeNextDate} />
+                </div>
+                <div className="row align-items-center justify-content-center gap-3 mb-3 p-0">
+                    <button type="button" className="btn w-auto text-center light-orange" onClick={onHandlePrev}>이전달</button>
+                    <button type="button" className="btn w-auto text-center light-orange" onClick={onHandleNext}>다음달</button>
                 </div>
             </section>
             <section className='row mb-3 chartArea'>
-                <h6 className='fw-bold'>총 예상 결과</h6>
+                <h6 className='w-100 text-center fw-bold'>총 예상 결과</h6>
                 <div className='row flex-column'>
-                    <div className='row align-items-center'>
+                    <div className='row align-items-center mb-2'>
                         <span className='w-auto'>금액: </span>
-                        <div>{totalList.total_price}원</div>
-                        <div>※ 외상 포함 금액입니다.</div>
+                        <div className='w-auto'>{totalList.total_price}원</div>
+                        <div className='ps mt-1'>※ 외상 포함 금액입니다.</div>
                     </div>
                     <div className='row align-items-center'>
-                        <span>인원</span>
-                        <div>{totalList.total_cnt}명</div>
-                        <div>※ 한 사람이 2개 시술 시 2사람으로 산정됩니다.</div>
+                        <span className='w-auto'>인원</span>
+                        <div className='w-auto'>{totalList.total_cnt}명</div>
+                        <div className='ps mt-1'>※ 한 사람이 2개 시술 시 2사람으로 산정됩니다.</div>
                     </div>
                 </div>
             </section>
@@ -85,7 +113,12 @@ const TotalChart = () => {
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="category_name" />
+                        <XAxis 
+                            dataKey="category_name" 
+                            tickFormatter={(value) => value} 
+                            angle={-45}
+                            textAnchor="end"
+                        />
                         <YAxis />
                         <Tooltip />
                         <Legend />
@@ -100,11 +133,16 @@ const TotalChart = () => {
                     <BarChart
                         data={list}
                         margin={{
-                            top: 5, right: 30, left: 20, bottom: 5,
+                            top: 5, right: 30, left: 0, bottom: 5,
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="category_name" />
+                        <XAxis 
+                            dataKey="category_name" 
+                            tickFormatter={(value) => value} 
+                            angle={-45}
+                            textAnchor="end"
+                        />
                         <YAxis />
                         <Tooltip />
                         <Legend />
@@ -116,17 +154,17 @@ const TotalChart = () => {
                 { /* 총 예상 금액 */}
                 <h6 className='w-100 text-center fw-bold'>총 예상 금액</h6>
                 <div className='row align-items-center flex-nowrap m-0 g-0 border'>
-                    <div className='col-6 m-0 text-center fw-bold pt-1 pb-1 border-end'>시술명</div>
-                    <div className='col-3 m-0 text-center fw-bold pt-1 pb-1 border-end'>총 금액</div>
+                    <div className='col-6 m-0 text-center fw-bold pt-1 pb-1'>시술명</div>
+                    <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>총 금액</div>
                     <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>총 인원</div>
                 </div>
                 {
                     list.map((item, index) => (
                         <div key={index} className='row align-items-center flex-nowrap m-0 g-0 border'>
-                            <div className='col-6 m-0 text-center fw-bold pt-1 pb-1 border-end row'>
+                            <div className='col-6 m-0 text-center fw-bold pt-1 pb-1 row'>
                                 <div className='mb-1'>{item.category_name}</div>
                             </div>
-                            <div className='col-3 m-0 text-center fw-bold pt-1 pb-1 border-end'>
+                            <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>
                                 <div className='mb-1'>{item.sum_prices}원</div>
                             </div>
                             <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>{item.cnt}명</div>
@@ -138,18 +176,18 @@ const TotalChart = () => {
                 { /* 외상 금액 */}
                 <h6 className='w-100 text-center fw-bold'>외상 금액</h6>
                 <div className='row align-items-center flex-nowrap m-0 g-0 border'>
-                    <div className='col-6 m-0 text-center fw-bold pt-1 pb-1 border-end'>시술명</div>
-                    <div className='col-3 m-0 text-center fw-bold pt-1 pb-1 border-end'>완료</div>
+                    <div className='col-6 m-0 text-center fw-bold pt-1 pb-1'>시술명</div>
+                    <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>완료</div>
                     <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>외상</div>
                 </div>
                 {
                     list.map((item, index) => (
                         <div key={index} className='row align-items-center flex-nowrap m-0 g-0 border'>
-                            <div className='col-6 m-0 text-center fw-bold pt-1 pb-1 border-end row'>
+                            <div className='col-6 m-0 text-center fw-bold pt-1 pb-1 row'>
                                 <div className='mb-1'>{item.category_name}</div>
                                 <div>[{item.sum_prices}]</div>
                             </div>
-                            <div className='col-3 m-0 text-center fw-bold pt-1 pb-1 border-end'>{item.sum_prices_ok}</div>
+                            <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>{item.sum_prices_ok}</div>
                             <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>{item.sum_prices_fail}</div>
                         </div>
                     ))
@@ -159,15 +197,15 @@ const TotalChart = () => {
                 {/* 작업 완료 내역 */}
                 <h6 className='w-100 text-center fw-bold'>작업 완료 내역</h6>
                 <div className='row align-items-center flex-nowrap m-0 g-0 border'>
-                    <div className='col-6 m-0 text-center fw-bold pt-1 pb-1 border-end'>시술명</div>
-                    <div className='col-3 m-0 text-center fw-bold pt-1 pb-1 border-end'>완료</div>
+                    <div className='col-6 m-0 text-center fw-bold pt-1 pb-1'>시술명</div>
+                    <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>완료</div>
                     <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>미완료</div>
                 </div>
                 {
                     list.map((item, index) => (
                         <div key={index} className='row align-items-center flex-nowrap m-0 g-0 border'>
-                            <div className='col-6 m-0 text-center fw-bold pt-1 pb-1 border-end'>{item.category_name}</div>
-                            <div className='col-3 m-0 text-center fw-bold pt-1 pb-1 border-end'>{item.work_completed_ok}</div>
+                            <div className='col-6 m-0 text-center fw-bold pt-1 pb-1'>{item.category_name}</div>
+                            <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>{item.work_completed_ok}</div>
                             <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>{item.work_completed_fail}</div>
                         </div>
                     ))

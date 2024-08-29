@@ -5,6 +5,13 @@
         margin-bottom: 20px;
     }
 
+    button{
+        background-color: #ffa699;
+        border-color: #ff7f3e;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
     .chartArea{
         background-color: #fff;
         border:2px solid style.$orange;
@@ -14,6 +21,10 @@
 
         div{
             border-color: style.$dark-purple !important;
+        }
+        .ps{
+            font-size: 14px;
+            color: style.$dark-gray;
         }
     }
 }
