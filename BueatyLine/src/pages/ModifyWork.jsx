@@ -45,6 +45,9 @@ const ModifyWork = () => {
             const data = await getContactApi()
             const listFromApi = data.list
             setSearchName(listFromApi)
+
+            const workIdxList = listFromApi.map(item => item.member_idx);
+            setCustomerIdx(workIdxList[0])
         }catch(error){
             console.error(error)
         }
@@ -72,16 +75,15 @@ const ModifyWork = () => {
                 console.error(error)
             }
         }
-        // getContactList()
         searchNameApi()
     }, [customerName])
 
     // 작업 날짜 
-    const [workDate, setWorkDate] = useState(item.work_date || '');
-    
+    const [workDate, setWorkDate] = useState(item.work_date || '');   
     const changeWorkDate = (e) => {
         setWorkDate(e.target.value);
     };
+
     // 다음 작업 예정일
     const [nextDate, setNextDate] = useState([item.work_du_date || ''])
     const getNextWorkDate = (e) => {
@@ -133,8 +135,10 @@ const ModifyWork = () => {
                     'Authorization': `Bearer ${accessToken}`
                 }
             })
+            alert('수정이 완료 되었습니다.')
+            navigate('/app')
             
-            if(response.data.come === 200) {
+            if(response.data.code === 200){
                 alert('수정이 완료 되었습니다.')
                 navigate('/app')
             }
