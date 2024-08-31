@@ -1,10 +1,10 @@
 import './AddWorkList.scss';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-const ModifyWork = () => {
+const ModifyWork = () => { 
     // 전달 받은 각 api 정보
     const location = useLocation();
     const item = location.state?.item;
@@ -58,7 +58,6 @@ const ModifyWork = () => {
     const [show, setShow] = useState(false) // 멤버 리스트 show 관리
     const onClickName = (item) => {
         setCustomerIdx(item.member_idx)
-        console.log(item.member_idx)
         setShow(false) // 멤버 리스트 닫기
         setCustomerName(item.member_name + ` [${item.member_phone}]`) // input에 클릭한 멤버 이름 보이게
     }
@@ -170,6 +169,8 @@ const ModifyWork = () => {
             console.error(error)
         }
     }
+
+
     return (
         <div className="ModifyWork position-relative">
             <div className='subTitle'>Work List 수정</div>
@@ -206,7 +207,9 @@ const ModifyWork = () => {
                         </section>
                     }
                 <section className='row align-items-center p-0 m-0 g-0 mb-3'>
-                    <h6 className='fw-bold'>작업 내역</h6>
+                    <div className='row align-items-center justify-content-between'>
+                        <h6 className='fw-bold w-auto'>현재 작업 내역</h6>
+                    </div>
                     <div className='row align-items-center border-bottom border-1 pb-1 pt-1 bg-light'>
                         작업 명: {item.categories_name}
                     </div>
@@ -217,12 +220,12 @@ const ModifyWork = () => {
                         총 가격: {item.sum_prices}
                     </div>
                 </section>
-                {/* <section className='row align-items-center p-0 m-0 g-0 mb-3'>
+                <section className='row align-items-center p-0 m-0 g-0 mb-3'>
                     <div className='row align-items-center flex-column'>
                         <button type='button' >작업 추가하기</button>
                     </div>
                     
-                </section> */}
+                </section>
                 <section className='row align-items-center p-0 m-0 g-0 mb-3'>
                     <h6 className='fw-bold'>메모</h6>
                     <textarea value={memo} onChange={changeMemo} className='p-1'/>
@@ -243,7 +246,7 @@ const ModifyWork = () => {
             </div>
             <section className='row align-items-center flex-column p-0 m-0 g-0'>
                 <button type='button' className='mb-2 w-100 active' onClick={() => modifyApi()}>수정</button>
-                <button type='button' className='mb-2 w-100' style={{borderLeft: '1px solid #ff7f3e'}} onClick={() => navigate('/app')}>취소</button>
+                <button type='button' className='mb-2 w-100' style={{borderLeft: '1px solid #ff7f3e'}} onClick={() => navigate('/app/work')}>취소</button>
                 <button type='button' className='w-100' style={{borderLeft: '1px solid #ff7f3e'}} onClick={() => deleteApi()}>삭제 하기</button>
             </section>
         </div>

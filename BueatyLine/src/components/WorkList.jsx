@@ -80,8 +80,8 @@ const WorkList = ({ list, checkInputOnTab, getList }) => {
     // 개별 리스트 버튼 클릭 시
     const navigate = useNavigate()
     const onMovePage = (item) => {
+        // console.log(item)
         navigate("/app/modifywork", { state: { item } })
-        console.log(item)
     }
 
     return (
@@ -123,6 +123,9 @@ const WorkList = ({ list, checkInputOnTab, getList }) => {
                                             </span>
                                             <span className="w-auto"> {item.work_date} </span>
                                         </div>
+                                        {/* <button className='modifyBtn bg-transparent modifyBtn w-auto' onClick={() => onMovePage(item)}>
+                                            <FontAwesomeIcon icon={faPen} /> 
+                                        </button> */}
                                         <button className='modifyBtn bg-transparent modifyBtn w-auto' onClick={() => onMovePage(item)}>
                                             <FontAwesomeIcon icon={faPen} /> 
                                         </button>

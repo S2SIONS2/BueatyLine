@@ -10,7 +10,8 @@ import NoData from "./components/NoData.jsx";
 import AddWorkList from './pages/AddWorkList'
 import './index.css';
 import '../src/scss/style.scss';
-import ModifyWork from "./pages/ModifyWork.jsx";
+// import ModifyWork from "./pages/ModifyWork.jsx";
+import ModifyWorkList from "./pages/ModifyWorkList.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -23,7 +24,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path='work' element={<AddWork />} />
         <Route path='totalchart' element={<TotalChart />} />
         <Route path="addworklist" element={<AddWorkList />} />
-        <Route path="modifywork" element={<ModifyWork />} />
+        {/* <Route path="modifywork" element={<ModifyWork />} /> */}
+
+        <Route path="modifywork" element={<ModifyWorkList />} />
       </Route>
       <Route path="*" element={<NoData />} /> {/* 404 not found */}
     </Routes>
