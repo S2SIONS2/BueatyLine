@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './TotalChart.scss';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, PieChart, Pie, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell ,Customized } from 'recharts';
 
 const TotalChart = () => {
     // 날짜 검색
@@ -68,6 +68,24 @@ const TotalChart = () => {
         }
     }
 
+    // 차트 각각 개별 색상 적용
+    const colors = ['#BAF2E9', '#BAD7F2', '#D6C9DE', '#F2BAC9', '#F2E2BA', '#293241', '#ee6c4d', '#5b8e7d', '#4c443c', '#b191ff']
+
+    // 차트 타입 두가지
+    // 1. 세로 막대형
+    const [barGraph, setBarGraph] = useState(true)
+    const onlBarGraph = () => {
+        setBarGraph(true)
+        setCircleGraph(false)
+    }
+
+    // 2. 원형 차트
+    const [circleGraph, setCircleGraph] = useState(false)
+    const onCircleGraph = () => {
+        setCircleGraph(true)
+        setBarGraph(false)
+    }
+
     useEffect(() => {
         getChartApi();
     }, [preDate, nextDate]);
@@ -75,7 +93,7 @@ const TotalChart = () => {
     return (
         <div className='TotalChart'>
             <div className='subTitle'>Total Chart</div>
-            <section className='row align-items-center justify-content-center mb-3'>
+            <section className='row align-items-center justify-content-center mb-3 g-0'>
                 <h6 className='fw-bold'>기간: </h6>
                 <div className='row align-items-center justify-content-center m-0 gap-1 flex-nowrap mb-2'>
                     <input type='date' className='col-5' value={preDate} onChange={changePreDate} />
@@ -87,7 +105,7 @@ const TotalChart = () => {
                     <button type="button" className="btn w-auto text-center light-orange" onClick={onHandleNext}>다음달</button>
                 </div>
             </section>
-            <section className='row mb-3 chartArea'>
+            <section className='row mb-3 chartArea g-0'>
                 <h6 className='w-100 text-center fw-bold'>총 예상 결과</h6>
                 <div className='row flex-column'>
                     <div className='row align-items-center mb-2'>
@@ -102,76 +120,169 @@ const TotalChart = () => {
                     </div>
                 </div>
             </section>
-            <section className='row mb-3 chartArea'>
-                {/* 시술 별 총 금액*/}
-                <h6 className='w-100 text-center fw-bold'>시술 별 총 금액</h6>
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart
-                        data={list}
-                        margin={{
-                            top: 5, right: 30, left: 20, bottom: 5,
-                        }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis 
-                            dataKey="category_name" 
-                            tickFormatter={(value) => value} 
-                            angle={-45}
-                            textAnchor="end"
-                        />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="sum_prices" fill="#8884d8" />
-                    </BarChart>
-                </ResponsiveContainer>
-            </section>
-            <section className='row mb-3 chartArea'>
-                {/* 시술 별 총 인원*/}
-                <h6 className='w-100 text-center fw-bold'>시술 별 총 인원</h6>
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart
-                        data={list}
-                        margin={{
-                            top: 5, right: 30, left: 0, bottom: 5,
-                        }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis 
-                            dataKey="category_name" 
-                            tickFormatter={(value) => value} 
-                            angle={-45}
-                            textAnchor="end"
-                        />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="cnt" fill="#82ca9d" />
-                    </BarChart>
-                </ResponsiveContainer>
-            </section>
-            <section className='row flex-column m-0 mb-3 chartArea'>
-                { /* 총 예상 금액 */}
-                <h6 className='w-100 text-center fw-bold'>총 예상 금액</h6>
-                <div className='row align-items-center flex-nowrap m-0 g-0 border'>
-                    <div className='col-6 m-0 text-center fw-bold pt-1 pb-1'>시술명</div>
-                    <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>총 금액</div>
-                    <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>총 인원</div>
-                </div>
-                {
-                    list.map((item, index) => (
-                        <div key={index} className='row align-items-center flex-nowrap m-0 g-0 border'>
-                            <div className='col-6 m-0 text-center fw-bold pt-1 pb-1 row'>
-                                <div className='mb-1'>{item.category_name}</div>
-                            </div>
-                            <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>
-                                <div className='mb-1'>{item.sum_prices}원</div>
-                            </div>
-                            <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>{item.cnt}명</div>
+            <div className='row align-items-center gap-2 flex-nowrap mb-2'>
+                <button type='button' value={barGraph} className='flex-fill' onClick={onlBarGraph}>바 그래프</button>
+                <button type='button' value={circleGraph} className='flex-fill' onClick={onCircleGraph}>원형 그래프</button>
+            </div>
+            {
+                barGraph && 
+                <div className='row flex-column g-0'>
+                    <section className='row mb-3 chartArea g-0'>
+                        {/* 시술 별 총 금액*/}
+                        <h6 className='w-100 text-center fw-bold'>시술 별 총 금액</h6>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart
+                                data={list}
+                                margin={{
+                                    top: 5, right: 30, left: 20, bottom: 5,
+                                }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis 
+                                    dataKey="category_name" 
+                                    tickFormatter={(value) => value} 
+                                    angle={-45}
+                                    textAnchor="end"
+                                />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="sum_prices">
+                                    {list.map((_, index) => (
+                                        <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </section>
+                    <section className='row mb-3 chartArea g-0'>
+                        {/* 시술 별 총 인원*/}
+                        <h6 className='w-100 text-center fw-bold'>시술 별 총 인원</h6>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart
+                                data={list}
+                                margin={{
+                                    top: 5, right: 30, left: 0, bottom: 5,
+                                }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis 
+                                    dataKey="category_name" 
+                                    tickFormatter={(value) => value} 
+                                    angle={-45}
+                                    textAnchor="end"
+                                />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="cnt">
+                                    {list.map((_, index) => (
+                                        <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </section>
+                    <section className='row flex-column m-0 mb-3 chartArea g-0'>
+                        { /* 총 예상 금액 */}
+                        <h6 className='w-100 text-center fw-bold'>총 예상 금액</h6>
+                        <div className='row align-items-center flex-nowrap m-0 g-0 border'>
+                            <div className='col-6 m-0 text-center fw-bold pt-1 pb-1'>시술명</div>
+                            <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>총 금액</div>
+                            <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>총 인원</div>
                         </div>
-                    ))
-                }
-            </section>
+                        {
+                            list.map((item, index) => (
+                                <div key={index} className='row align-items-center flex-nowrap m-0 g-0 border'>
+                                    <div className='col-6 m-0 text-center fw-bold pt-1 pb-1 row'>
+                                        <div className='mb-1'>{item.category_name}</div>
+                                    </div>
+                                    <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>
+                                        <div className='mb-1'>{item.sum_prices}원</div>
+                                    </div>
+                                    <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>{item.cnt}명</div>
+                                </div>
+                            ))
+                        }
+                    </section>
+                </div>
+            }
+
+            {
+                circleGraph && 
+                <div className='row flex-column g-0'>
+                    <section className='row mb-3 chartArea g-0'>
+                        {/* 시술 별 총 금액*/}
+                        <h6 className='w-100 text-center fw-bold'>시술 별 총 금액</h6>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <PieChart>
+                                <Pie
+                                    data={list}
+                                    dataKey="sum_prices"
+                                    nameKey="category_name"
+                                    cx="50%"
+                                    cy="50%"
+                                    outerRadius={100}
+                                    fill="#8884d8"
+                                    label
+                                >
+                                    {list.map((_, index) => (
+                                        <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                                <Legend />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </section>
+                    <section className='row mb-3 chartArea g-0 position-relative'>
+                        {/* 시술 별 총 인원*/}
+                        <h6 className='w-100 text-center fw-bold'>시술 별 총 인원</h6>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <PieChart>
+                                <Pie
+                                    data={list}
+                                    dataKey="cnt"
+                                    nameKey="category_name"
+                                    cx="50%"
+                                    cy="50%"
+                                    outerRadius={100}
+                                    fill="#8884d8"
+                                    label
+                                >
+                                    {list.map((_, index) => (
+                                        <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                                <Legend />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </section>
+                    <section className='row flex-column m-0 mb-3 chartArea g-0'>
+                        { /* 총 예상 금액 */}
+                        <h6 className='w-100 text-center fw-bold'>총 예상 금액</h6>
+                        <div className='row align-items-center flex-nowrap m-0 g-0 border'>
+                            <div className='col-6 m-0 text-center fw-bold pt-1 pb-1'>시술명</div>
+                            <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>총 금액</div>
+                            <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>총 인원</div>
+                        </div>
+                        {
+                            list.map((item, index) => (
+                                <div key={index} className='row align-items-center flex-nowrap m-0 g-0 border'>
+                                    <div className='col-6 m-0 text-center fw-bold pt-1 pb-1 row'>
+                                        <div className='mb-1'>{item.category_name}</div>
+                                    </div>
+                                    <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>
+                                        <div className='mb-1'>{item.sum_prices}원</div>
+                                    </div>
+                                    <div className='col-3 m-0 text-center fw-bold pt-1 pb-1'>{item.cnt}명</div>
+                                </div>
+                            ))
+                        }
+                    </section>
+                </div>
+            }
             <section className='row flex-column m-0 mb-3 chartArea'>
                 { /* 외상 금액 */}
                 <h6 className='w-100 text-center fw-bold'>외상 금액</h6>

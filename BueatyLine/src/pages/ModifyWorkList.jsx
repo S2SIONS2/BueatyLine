@@ -16,7 +16,7 @@ const ModifyWork = () => {
     // 각각의 작업 리스트 값
     const accessToken = localStorage.getItem('accessToken'); // api 인가용 aceessToken값
     const [workList, setWorkList] = useState([]); // api data 값
-    const [subWorkList, setSubWorkList] = useState([]) // api subData 값
+    const [subWorkList, setSubWorkList] = useState([]); // api data 값
     const getModApi = async () => {
         try{
             const url = '/api/work_api/getMod';
@@ -31,6 +31,7 @@ const ModifyWork = () => {
             });
             setWorkList(response.data.data);
             setSubWorkList(response.data.subdata);
+            // return response.data
         } catch(error) {
             console.error(error);
         } finally {
@@ -42,15 +43,29 @@ const ModifyWork = () => {
         getModApi();
     }, []);
 
-    useEffect(() => {
-        if (workList && workList.work_idx) {
-            setWorkDate(workList.work_date);
+    // 리스트 값 담아오기
+    const [listCategoryName, setListCategoryName] = useState([])
+    const containName = () => {
+        for(let i =0; i < subWorkList.length; i++){
+            for(let j = 0; j < list.length; j ++){
+                if(subWorkList[i].idx_kmc_work_category === list[j].category_idx){
+                    setListCategoryName((prev) => [...prev, list[j].category_name])
+                }
+            }
         }
-        // if (subWorkList){
-        //     if(subWorkList.idx_kmc_work_category)
-        //     setCategoryName()
-        // }
+    }
+
+    useEffect(() => {       
+        if (workList && workList.work_idx) {
+            setWorkDate(workList.work_date); // 위에 나온 input date 값
+        }
     }, [workList]);
+    
+    useEffect(() => {
+        containName()
+        console.log(listCategoryName)
+
+    }, [subWorkList])
 
     // 카테고리 api 호출
     const [list, setList] = useState([]); // api list를 담을 state
@@ -346,7 +361,7 @@ const ModifyWork = () => {
                     <article className='row align-items-center p-0 m-0'>
                         <div className='row flex-column align-items-center p-0 col-5 ellipsis g-0'>
                             {
-                                categoryName.map((item, index) => (
+                                listCategoryName.map((item, index) => (
                                     <div className='p-0 mb-2' key={index}>{item}</div>
                                 ))
                             }
