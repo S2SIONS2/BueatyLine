@@ -5,6 +5,8 @@ import axios from 'axios';
 import CategoryWork from '../components/CategoryWork';
 import { jwtDecode } from 'jwt-decode';
 import Loading from '../components/Loading';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
 
 const ModifyWork = () => {
     const [loading, setLoading] = useState(true); // 로딩중인지 체크
@@ -44,6 +46,14 @@ const ModifyWork = () => {
     }, []);
 
     // 리스트 값 담아오기
+    // 카테고리 명 idx
+    const [listCategoryNameIdx, setListCategoryNameIdx] = useState([])
+    const containNameIdx = () => {
+        for(let i =0; i < subWorkList.length; i++){
+            setListCategoryNameIdx((prev) => [...prev, subWorkList[i].idx_kmc_work_category])
+        }
+    }
+    // 카테고리 명
     const [listCategoryName, setListCategoryName] = useState([])
     const containName = () => {
         for(let i =0; i < subWorkList.length; i++){
@@ -54,6 +64,27 @@ const ModifyWork = () => {
             }
         }
     }
+    // 카테고리 차수
+    const [listChaValue, setListChaValue] = useState([])
+    const containChaValue = () => {
+        for(let i = 0; i < subWorkList.length; i++){
+            setListChaValue((prev) => [...prev, subWorkList[i].ctglist_cha])
+        }
+    }
+    // 카테고리 금액
+    const [listPrice, setListPrice] = useState([])
+    const containPrice = () => {
+        for(let i = 0; i < subWorkList.length; i++){
+            setListPrice((prev) => [...prev, subWorkList[i].ctglist_price])
+        }
+    }
+    // 카테고리 다음 작업일
+    // const [listNextWork, setListNextWork] = useState([])
+    // const containNextWork = () => {
+    //     for(let i = 0; i < workList.length; i++){
+    //         setListNextWork((prev) => [...prev, workList[i].work_date])
+    //     }
+    // }
 
     useEffect(() => {       
         if (workList && workList.work_idx) {
@@ -62,9 +93,11 @@ const ModifyWork = () => {
     }, [workList]);
     
     useEffect(() => {
-        containName()
-        console.log(listCategoryName)
-
+        containNameIdx()
+        containName();
+        containChaValue();
+        containPrice();
+        // containNextWork();
     }, [subWorkList])
 
     // 카테고리 api 호출
@@ -98,7 +131,46 @@ const ModifyWork = () => {
         }
     };
 
-    // 작업 등록
+    // 기존 작업 수정
+    // 작업 수정 모달
+    const [modal, setModal] = useState({
+        isOpen : false,
+        index: null
+    })
+
+    // 버튼 클릭 시 해당 버튼 value 값 담고 active 클래스 추가
+    const [activeIndex, setActiveIndex] = useState(0); // 버튼 class 핸들링
+    // const [btnValue, setBtnValue] = useState(1) // value 초기값 1
+
+    // 버튼 클릭 시
+    const getBtnValue = (e, index) => { 
+        const value = e.target.value || e.currentTarget.value;
+        for(let i = 0; i < subWorkList.length; i++){
+            setListChaValue((prev) => [...prev, value])
+        }
+        subWorkList[modal.index].ctglist_cha
+        setActiveIndex(index)
+    }
+
+    // 각 카테고리 리스트 차수 가져오기 (e.g. 아이라인1차, 기타3차 등)
+    const [categoryChaValue, setCategoryChaValue] = useState()
+    // chaValue 값 수정
+    const modifyInfo = (index) => {
+        list.find((item) => {
+            if (subWorkList[index].idx_kmc_work_category === item.category_idx) {
+                setCategoryChaValue(item.category_cha);
+                return true; // 조건을 만족하면 true를 반환하여 find를 종료
+            }
+            return false; // 조건을 만족하지 않으면 false를 반환
+        });
+        
+        setModal({
+            isOpen: true,
+            index: index
+        })       
+    }
+    
+    // 새 작업 등록
     // 작업 날짜 
     // const today = new Date();
     // const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -113,7 +185,6 @@ const ModifyWork = () => {
     const [categoryName, setCategoryName] = useState([])
     const getCategoryName = (data) => {
         setCategoryName((prev) => [...prev, data])
-        // setCategoryName(data)
     }
 
     // 작업 이름 idx값
@@ -205,6 +276,9 @@ const ModifyWork = () => {
             const data = await getContactApi()
             const listFromApi = data.list
             setSearchName(listFromApi)
+
+            const workIdxList = listFromApi.map(item => item.member_idx);
+            setCustomerIdx(workIdxList[0])
         }catch(error){
             console.error(error)
         }
@@ -280,10 +354,15 @@ const ModifyWork = () => {
     const changeMemo = (e) => {
         setMemo(e.target.value);
     };
-
-    // 작업 내역 등록 api
+    
+    // 수정 값
+    const combineCategoryIdx = [...listCategoryNameIdx, ...categoryNameIdx]
+    const combineCha = [...listChaValue, ...chaValues];
+    const combinePrice = [...listPrice, ...price];
+    // const combineDate = [listNextWork, ...nextDate]
+    // 작업 내역 등록, 수정 api
     const navigate = useNavigate(); // 작업 후 페이지 이동
-    const addWorkApiList = async () => {
+    const modifyWorkApiList = async () => {
         try{
             const decodedToken = jwtDecode(accessToken); // 회원 아이디용 디코드
             const url = '/api/work_api/add';
@@ -299,9 +378,9 @@ const ModifyWork = () => {
                     work_memo: memo // 메모
                 },
                 subItems: {
-                    idx_kmc_work_category: categoryNameIdx, // 각 카테고리 이름 idx 값
-                    ctglist_cha: chaValues, // 작업 차수
-                    ctglist_price: price, // 가격
+                    idx_kmc_work_category: combineCategoryIdx, // 각 카테고리 이름 idx 값
+                    ctglist_cha: combineCha, // 작업 차수
+                    ctglist_price: combinePrice, // 가격
                     ctglist_date: nextDate, // 각 카테고리 2차 작업날
                 }
             }
@@ -342,6 +421,41 @@ const ModifyWork = () => {
         setNextDate(nextDate.filter((_, i) => i !== index))
     }
 
+    // 삭제 api 호출
+    const deleteApi = async () => {
+        try{
+            const url = '/api/work_api/del'
+            let params = {
+                idx : item.work_idx
+            }
+            const response = await axios.get(url, {
+                params: params,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+
+            if(response.data.code === 200){
+                alert('삭제가 완료 되었습니다.')
+                navigate('/app/work')
+            }
+        }catch(error) {
+            console.error(error)
+        }
+    }
+
+    const readInfo = () => {
+        console.log(listCategoryName)
+        console.log(listCategoryNameIdx)
+        console.log(listPrice)
+        console.log(listChaValue)
+
+        // console.log(combineDate)
+        console.log(combineCategoryIdx)
+        console.log(combinePrice)
+        console.log(combineCha)
+    }
+
     if (loading) {
         return (
             <Loading /> // 로딩 중 표시
@@ -351,6 +465,7 @@ const ModifyWork = () => {
     return (
         <div className="ModifyWork position-relative" ref={element}>
             <div className='subTitle'>Work List 수정</div>
+            <button type='button' onClick={readInfo}>클릭</button>
             <div>
                 <section className='mb-4'>
                     <h6 className='fw-bold'>작업 날짜</h6>
@@ -368,24 +483,46 @@ const ModifyWork = () => {
                         </div>
                         <div className='row flex-column align-items-center p-0 col-2 g-0'>
                             {
-                                chaValues.map((item, index) => (
+                                listChaValue.map((item, index) => (
                                 <div key={index} className='w-auto text-nowrap row flex-nowrap m-0 mb-2'>{item}차</div>
                             ))
                             }
                         </div>
                         <div className='row flex-column align-items-center justify-content-center text-center p-0 col-4 g-0'>
                             {
-                                price.map((item, index) => (
-                                    <div className='mb-2' key={index}>{item}</div>
+                                listPrice.map((item, index) => (
+                                    <div className='mb-2' key={index}>{item}원</div>
                                 ))
                             }
                         </div>
                         <div className='row flex-column align-items-center justify-content-center p-0 col-1 g-0'>
                             {
-                                categoryName.map((_, index) => (
+                                listChaValue.map((_, index) => (
                                     <button key={index} type='button' className='h-auto text-center mb-2' 
-                                        onClick={() => deleteWorkList(index)}>X</button>
+                                        onClick={() => modifyInfo(index)}
+                                        > <FontAwesomeIcon icon={faPen} /> </button>
                                 ))
+                            }
+                        </div>
+                        <div className='row flex-column m-0 p-0 g-0'>
+                            {
+                                modal.isOpen && 
+                                <div className='row align-items-center w-100 p-0 m-0 g-0'>
+                                    <span>{listCategoryName[modal.index]}</span>
+                                    {
+                                        Array.from({length: categoryChaValue}, (_, index) => (
+                                            <button type='button' 
+                                                className={`w-auto p-0 ${activeIndex === index ? 'active' : ''}`}  
+                                                key={index} 
+                                                value={index + 1}
+                                                onClick={(e) => getBtnValue(e, index)}
+                                            >
+                                                {index + 1} 차
+                                            </button>
+                                        ))
+                                    }                                   
+                                </div>
+                                
                             }
                         </div>
                     </article>
@@ -444,7 +581,7 @@ const ModifyWork = () => {
                                 <div className='row flex-column align-items-center justify-content-center text-center p-0 col-4 g-0'>
                                     {
                                         price.map((item, index) => (
-                                            <div className='mb-2' key={index}>{item}</div>
+                                            <div className='mb-2' key={index}>{item}원</div>
                                         ))
                                     }
                                 </div>
@@ -464,7 +601,7 @@ const ModifyWork = () => {
                 <section className='mb-4 position-relative'>
                     <h6 className='fw-bold'>고객</h6>
                     <div className='row flex-direction-colum p-0 m-0'>
-                        <input type='search' value={customerName} onChange={changeName} />
+                        <input type='search' value={customerName} onChange={changeName} placeholder={workList.member_name}/>
                         <div className='position-absolute bg-white top-100 overflow-auto'>
                             {
                                 show && customerName && serachName.map((item, index) => (
@@ -499,14 +636,19 @@ const ModifyWork = () => {
                         <textarea value={memo} onChange={changeMemo}></textarea>
                     </div>
                 </section>
-                <section className='mt-4'>
+                <section className='row align-items-center flex-column p-0 m-0 g-0'>
+                    <button type='button' className='mb-2 w-100 active' onClick={() => modifyWorkApiList()}>수정</button>
+                    <button type='button' className='mb-2 w-100' style={{borderLeft: '1px solid #ff7f3e'}} onClick={() => navigate('/app/work')}>취소</button>
+                    <button type='button' className='w-100' style={{borderLeft: '1px solid #ff7f3e'}} onClick={() => deleteApi()}>삭제 하기</button>
+                </section>
+                {/* <section className='mt-4'>
                     <div className='row p-0 m-0'>
-                        <button type='button' className='active' onClick={addWorkApiList}>등록하기</button>
+                        <button type='button' className='active' onClick={addWorkApiList}>수정하기</button>
                         <button type='button'>
                             <Link to="/app/work">뒤로가기</Link>
                         </button>
                     </div>
-                </section>
+                </section> */}
             </div>
         </div>
     );
