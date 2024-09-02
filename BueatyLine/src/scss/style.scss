@@ -43,6 +43,8 @@ $black-green: #192400;
 input{
     border-color: $orange !important;
     border-top-color: $orange !important;
+    border-top: 1px solid;
+    border-left: 1px solid;
     border-width: 1px;
     outline: none;
     border-radius: 3px;

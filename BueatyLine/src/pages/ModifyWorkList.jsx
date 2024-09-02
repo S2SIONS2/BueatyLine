@@ -78,13 +78,6 @@ const ModifyWork = () => {
             setListPrice((prev) => [...prev, subWorkList[i].ctglist_price])
         }
     }
-    // 카테고리 다음 작업일
-    // const [listNextWork, setListNextWork] = useState([])
-    // const containNextWork = () => {
-    //     for(let i = 0; i < workList.length; i++){
-    //         setListNextWork((prev) => [...prev, workList[i].work_date])
-    //     }
-    // }
 
     useEffect(() => {       
         if (workList && workList.work_idx) {
@@ -97,7 +90,6 @@ const ModifyWork = () => {
         containName();
         containChaValue();
         containPrice();
-        // containNextWork();
     }, [subWorkList])
 
     // 카테고리 api 호출
@@ -138,22 +130,9 @@ const ModifyWork = () => {
         index: null
     })
 
-    // 버튼 클릭 시 해당 버튼 value 값 담고 active 클래스 추가
-    const [activeIndex, setActiveIndex] = useState(0); // 버튼 class 핸들링
-    // const [btnValue, setBtnValue] = useState(1) // value 초기값 1
-
-    // 버튼 클릭 시
-    const getBtnValue = (e, index) => { 
-        const value = e.target.value || e.currentTarget.value;
-        for(let i = 0; i < subWorkList.length; i++){
-            setListChaValue((prev) => [...prev, value])
-        }
-        subWorkList[modal.index].ctglist_cha
-        setActiveIndex(index)
-    }
-
     // 각 카테고리 리스트 차수 가져오기 (e.g. 아이라인1차, 기타3차 등)
     const [categoryChaValue, setCategoryChaValue] = useState()
+    const [listCategoryCha, setListCategoryCha] = useState()
     // chaValue 값 수정
     const modifyInfo = (index) => {
         list.find((item) => {
@@ -163,19 +142,38 @@ const ModifyWork = () => {
             }
             return false; // 조건을 만족하지 않으면 false를 반환
         });
+
+        setListCategoryCha(index)
         
         setModal({
             isOpen: true,
             index: index
         })       
     }
+    // modal index가 바뀔 때 마다 activeIndex 초기화
+    useEffect(() => {
+        if (modal.isOpen && modal.index !== null) {
+            setActiveIndex(subWorkList[modal.index].ctglist_cha - 1); // 초기 activeIndex 설정
+        }
+    }, [modal]);
+
+    // 버튼 클릭 시 해당 버튼 value 값 담고 active 클래스 추가
+    const [activeIndex, setActiveIndex] = useState(listCategoryCha || 0); // 버튼 class 핸들링
+
+    // 버튼 클릭 시
+    const getBtnValue = (e, index) => { 
+        const value = e.target.value || e.currentTarget.value;
+        setListChaValue((prev) => {
+            const updateList = [...prev]
+            updateList[modal.index] = value
+            return updateList
+        })
+        setActiveIndex(index)
+    }
     
     // 새 작업 등록
     // 작업 날짜 
-    // const today = new Date();
-    // const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    const [workDate, setWorkDate] = useState(workList.work_date || '');
-    
+    const [workDate, setWorkDate] = useState(workList.work_date || '');   
     const changeWorkDate = (e) => {
         setWorkDate(e.target.value);
     };
@@ -359,7 +357,25 @@ const ModifyWork = () => {
     const combineCategoryIdx = [...listCategoryNameIdx, ...categoryNameIdx]
     const combineCha = [...listChaValue, ...chaValues];
     const combinePrice = [...listPrice, ...price];
-    // const combineDate = [listNextWork, ...nextDate]
+
+    // 선택 기존 리스트 삭제
+    const deleteList = async () => {
+        // 맞는 이름, idx, 차수, 가격, 날짜 순으로 삭제
+        for(let i = 0; i < list.length; i++) {
+            if(subWorkList[modal.index].idx_kmc_work_category === list[i].category_idx){
+                setListCategoryName(prevItem => prevItem.filter((_, idx) => idx !== modal.index))
+            }
+        }
+        setListCategoryNameIdx(prevItem => prevItem.filter((_, idx) => idx !== modal.index));
+        setListChaValue(prevItem => prevItem.filter((_, idx) => idx !== modal.index));
+        setListPrice(prevItem => prevItem.filter((_, idx) => idx !== modal.index));
+        setNextDate(prevItem => prevItem.filter((_, idx) => idx !== modal.index));
+
+        // 팝업 닫기
+        setModal({isOpen: false})
+    };
+    
+
     // 작업 내역 등록, 수정 api
     const navigate = useNavigate(); // 작업 후 페이지 이동
     const modifyWorkApiList = async () => {
@@ -454,6 +470,7 @@ const ModifyWork = () => {
         console.log(combineCategoryIdx)
         console.log(combinePrice)
         console.log(combineCha)
+        
     }
 
     if (loading) {
@@ -469,7 +486,7 @@ const ModifyWork = () => {
             <div>
                 <section className='mb-4'>
                     <h6 className='fw-bold'>작업 날짜</h6>
-                    <input type="date" className='w-100' value={workDate} onChange={changeWorkDate} />
+                    <input type="date" className='w-100 ps-1' value={workDate} onChange={changeWorkDate} />
                 </section>
                 <section className='mb-4'>
                     <h6 className='fw-bold'>진행 중인 작업 내역</h6>                        
@@ -498,33 +515,42 @@ const ModifyWork = () => {
                         <div className='row flex-column align-items-center justify-content-center p-0 col-1 g-0'>
                             {
                                 listChaValue.map((_, index) => (
-                                    <button key={index} type='button' className='h-auto text-center mb-2' 
-                                        onClick={() => modifyInfo(index)}
+                                    <button key={index} type='button' className='h-auto text-center mb-2 btnReset' 
+                                        onClick={() => {
+                                            modifyInfo(index);
+                                            moveTop();
+                                        }}
                                         > <FontAwesomeIcon icon={faPen} /> </button>
                                 ))
                             }
                         </div>
-                        <div className='row flex-column m-0 p-0 g-0'>
-                            {
-                                modal.isOpen && 
-                                <div className='row align-items-center w-100 p-0 m-0 g-0'>
-                                    <span>{listCategoryName[modal.index]}</span>
-                                    {
-                                        Array.from({length: categoryChaValue}, (_, index) => (
-                                            <button type='button' 
-                                                className={`w-auto p-0 ${activeIndex === index ? 'active' : ''}`}  
-                                                key={index} 
-                                                value={index + 1}
-                                                onClick={(e) => getBtnValue(e, index)}
-                                            >
-                                                {index + 1} 차
-                                            </button>
-                                        ))
-                                    }                                   
-                                </div>
-                                
-                            }
-                        </div>
+                        {
+                            modal.isOpen && 
+                            <div className='row flex-column m-0 p-0 g-0 bg-light border border-info'>
+                                <div className='row align-items-center w-100 p-2 m-0 g-0'>
+                                    <h6 className='fw-bold'>진행 작업 수정</h6>
+                                    <span className='mb-2'>{listCategoryName[modal.index]}</span>
+                                    <div className='row align-items-center w-100 p-2 m-0 g-0 mb-2'>
+                                        {
+                                            Array.from({length: categoryChaValue}, (_, index) => (
+                                                <button type='button' 
+                                                    className={`w-auto p-0 ${activeIndex === index ? 'active' : ''}`}  
+                                                    key={index} 
+                                                    value={index + 1}
+                                                    onClick={(e) => getBtnValue(e, index)}
+                                                >
+                                                    {index + 1} 차
+                                                </button>
+                                            ))
+                                        }
+                                    </div>
+                                    <div className='row flex-column w-100 m-0 p-0 g-0'>
+                                        <button type='button' className='mb-2 active btnReset' onClick={() => setModal({isOpen: false})}>닫기</button>
+                                        <button type='button' className='btnReset' onClick={() => deleteList(item)}>삭제하기</button>
+                                    </div>
+                                </div>                                
+                            </div>
+                        }                            
                     </article>
                 </section>
                 <section className='mb-4'>
@@ -563,7 +589,7 @@ const ModifyWork = () => {
                     <div className='checkWorkList'>
                         {   categoryNameIdx.length != 0 &&
                             <article className='row align-items-center p-0 m-0'>
-                                <h6 className='fw-bold p-0'>작업 내역 확인</h6>
+                                <h6 className='fw-bold p-0'>추가 작업 내역 확인</h6>
                                 <div className='row flex-column align-items-center p-0 col-5 ellipsis g-0'>
                                     {
                                         categoryName.map((item, index) => (
@@ -637,18 +663,10 @@ const ModifyWork = () => {
                     </div>
                 </section>
                 <section className='row align-items-center flex-column p-0 m-0 g-0'>
-                    <button type='button' className='mb-2 w-100 active' onClick={() => modifyWorkApiList()}>수정</button>
-                    <button type='button' className='mb-2 w-100' style={{borderLeft: '1px solid #ff7f3e'}} onClick={() => navigate('/app/work')}>취소</button>
-                    <button type='button' className='w-100' style={{borderLeft: '1px solid #ff7f3e'}} onClick={() => deleteApi()}>삭제 하기</button>
+                    <button type='button' className='mb-2 w-100 active btnReset' onClick={() => modifyWorkApiList()}>수정</button>
+                    <button type='button' className='mb-2 w-100 btnReset' style={{borderLeft: '1px solid #ff7f3e'}} onClick={() => navigate('/app/work')}>취소</button>
+                    <button type='button' className='w-100 btnReset' style={{borderLeft: '1px solid #ff7f3e'}} onClick={() => deleteApi()}>삭제 하기</button>
                 </section>
-                {/* <section className='mt-4'>
-                    <div className='row p-0 m-0'>
-                        <button type='button' className='active' onClick={addWorkApiList}>수정하기</button>
-                        <button type='button'>
-                            <Link to="/app/work">뒤로가기</Link>
-                        </button>
-                    </div>
-                </section> */}
             </div>
         </div>
     );
