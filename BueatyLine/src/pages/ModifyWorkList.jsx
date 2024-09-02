@@ -45,53 +45,6 @@ const ModifyWork = () => {
         getModApi();
     }, []);
 
-    // 리스트 값 담아오기
-    // 카테고리 명 idx
-    const [listCategoryNameIdx, setListCategoryNameIdx] = useState([])
-    const containNameIdx = () => {
-        for(let i =0; i < subWorkList.length; i++){
-            setListCategoryNameIdx((prev) => [...prev, subWorkList[i].idx_kmc_work_category])
-        }
-    }
-    // 카테고리 명
-    const [listCategoryName, setListCategoryName] = useState([])
-    const containName = () => {
-        for(let i =0; i < subWorkList.length; i++){
-            for(let j = 0; j < list.length; j ++){
-                if(subWorkList[i].idx_kmc_work_category === list[j].category_idx){
-                    setListCategoryName((prev) => [...prev, list[j].category_name])
-                }
-            }
-        }
-    }
-    // 카테고리 차수
-    const [listChaValue, setListChaValue] = useState([])
-    const containChaValue = () => {
-        for(let i = 0; i < subWorkList.length; i++){
-            setListChaValue((prev) => [...prev, subWorkList[i].ctglist_cha])
-        }
-    }
-    // 카테고리 금액
-    const [listPrice, setListPrice] = useState([])
-    const containPrice = () => {
-        for(let i = 0; i < subWorkList.length; i++){
-            setListPrice((prev) => [...prev, subWorkList[i].ctglist_price])
-        }
-    }
-
-    useEffect(() => {       
-        if (workList && workList.work_idx) {
-            setWorkDate(workList.work_date); // 위에 나온 input date 값
-        }
-    }, [workList]);
-    
-    useEffect(() => {
-        containNameIdx()
-        containName();
-        containChaValue();
-        containPrice();
-    }, [subWorkList])
-
     // 카테고리 api 호출
     const [list, setList] = useState([]); // api list를 담을 state
 
@@ -122,6 +75,61 @@ const ModifyWork = () => {
             console.error('error:', error);
         }
     };
+
+    // 리스트 값 담아오기
+    // 카테고리 명 idx
+    const [listCategoryNameIdx, setListCategoryNameIdx] = useState([])
+    const containNameIdx = () => {
+        for(let i =0; i < subWorkList.length; i++){
+            setListCategoryNameIdx((prev) => [...prev, subWorkList[i].idx_kmc_work_category])
+        }
+    }
+    // 카테고리 명
+    const [listCategoryName, setListCategoryName] = useState([])
+    const containName = () => {
+        const names = [];
+        for(let i = 0; i < subWorkList.length; i++){
+            for(let j = 0; j < list.length; j++){
+                if(subWorkList[i].idx_kmc_work_category === list[j].category_idx){
+                    names.push(list[j].category_name);
+                }
+            }
+        }
+        setListCategoryName(names);
+    }
+    // 카테고리 차수
+    const [listChaValue, setListChaValue] = useState([])
+    const containChaValue = () => {
+        for(let i = 0; i < subWorkList.length; i++){
+            setListChaValue((prev) => [...prev, subWorkList[i].ctglist_cha])
+        }
+    }
+    // 카테고리 금액
+    const [listPrice, setListPrice] = useState([])
+    const containPrice = () => {
+        for(let i = 0; i < subWorkList.length; i++){
+            setListPrice((prev) => [...prev, subWorkList[i].ctglist_price])
+        }
+    }
+
+    useEffect(() => {
+        if (subWorkList.length > 0 && list.length > 0) {
+            containName();
+        }
+    }, [subWorkList, list]);
+
+    useEffect(() => {       
+        if (workList && workList.work_idx) {
+            setWorkDate(workList.work_date); // 위에 나온 input date 값
+        }
+    }, [workList]);
+    
+    useEffect(() => {
+        containNameIdx()
+        containName();
+        containChaValue();
+        containPrice();
+    }, [subWorkList])
 
     // 기존 작업 수정
     // 작업 수정 모달
@@ -216,6 +224,25 @@ const ModifyWork = () => {
     const [isChecked, setIsChecked] = useState([]); // 체크 O/X 표시
     const [categoryModal, setCategoryModal] = useState([]); // 작업 선택을 위한 카테고리 모달
 
+    // 이미 있는 작업 리스트는 체크 되어있게 
+    const checkIsChecked = () => {
+        const updatedIsChecked = new Array(list.length).fill(false);
+        for (let i = 0; i < subWorkList.length; i++) {
+            for (let j = 0; j < list.length; j++) {
+                if (subWorkList[i].idx_kmc_work_category === list[j].category_idx) {
+                    updatedIsChecked[j] = true;
+                }
+            }
+        }
+        setIsChecked(updatedIsChecked);
+    }
+
+    useEffect(() => {
+        if (subWorkList.length > 0 && list.length > 0) {
+            checkIsChecked()
+        }
+    }, [subWorkList, list])
+
     const onChangeCheck = (e, index) => {
         setIsChecked(prevState => { // 각각의 checkbox 체크 상태
             const newState = [...prevState];
@@ -229,7 +256,6 @@ const ModifyWork = () => {
             return newState;
         });
     };
-    // 
     const checkCloseBtn = (data) => {
         setIsChecked(data)
     }
