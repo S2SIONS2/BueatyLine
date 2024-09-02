@@ -211,7 +211,7 @@ const ModifyWork = () => {
     // 다음 작업 예정일
     const [nextDate, setNextDate] = useState([])
     const getNextWorkDate = (data) => {
-        setNextDate(data)
+        setNextDate((prev) => [...prev, data])
     }
 
     // 작업(카테고리) 선택 체크
@@ -355,7 +355,7 @@ const ModifyWork = () => {
         setMemo(e.target.value);
     };
     
-    // 수정 값
+    // 기존 + 추가 리스트 합치기
     const combineCategoryIdx = [...listCategoryNameIdx, ...categoryNameIdx]
     const combineCha = [...listChaValue, ...chaValues];
     const combinePrice = [...listPrice, ...price];
@@ -450,7 +450,7 @@ const ModifyWork = () => {
         console.log(listPrice)
         console.log(listChaValue)
 
-        // console.log(combineDate)
+        console.log(nextDate)
         console.log(combineCategoryIdx)
         console.log(combinePrice)
         console.log(combineCha)

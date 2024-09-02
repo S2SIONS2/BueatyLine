@@ -80,7 +80,7 @@ const AddWorkList = () => {
     // 다음 작업 예정일
     const [nextDate, setNextDate] = useState([])
     const getNextWorkDate = (data) => {
-        setNextDate(data)
+        setNextDate((prev) => [...prev, data])
     }
 
     // 작업(카테고리) 선택 체크

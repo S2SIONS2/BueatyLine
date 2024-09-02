@@ -48,7 +48,7 @@ const CategoryWork = ({
     // 다음 작업 예정일 전달
     const today = new Date();
     const formattedNextDate = `${today.getFullYear()}-${String(today.getMonth() + 2).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    const [nextWorkDate, setNextWorkDate] = useState([formattedNextDate || ''])
+    const [nextWorkDate, setNextWorkDate] = useState(formattedNextDate || '')
     const changeNextWorkDate = (e) => {
         setNextWorkDate(e.target.value);
     };
