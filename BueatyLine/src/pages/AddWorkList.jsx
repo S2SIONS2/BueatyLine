@@ -115,6 +115,13 @@ const AddWorkList = () => {
         element.current.scrollIntoView({behavor: 'smooth', block: "start"})
     }
 
+    // 모달 중복 생성 방지
+    const checkRepeat = (index) => {
+        if(isChecked[index] == true){
+            alert('작업 내역은 중복으로 추가 할 수 없습니다.')
+        }
+    }
+
     // 고객명 입력
     const [customerName, setCustomerName] = useState(''); // 작업 한 고객 명 검색
     const [serachName, setSearchName] = useState([]); // 검색된 연락처 api 리스트
@@ -301,7 +308,7 @@ const AddWorkList = () => {
                                         className='me-2'
                                         checked={isChecked[index] || false}
                                         onChange={(e) => onChangeCheck(e, index)}
-                                        onClick={moveTop}
+                                        onClick={() => {moveTop(); checkRepeat(index)}}
                                     /> {item.category_name}
                                 </label>
                                 {categoryModal[index] &&
@@ -315,7 +322,10 @@ const AddWorkList = () => {
                                         getChaValue = {getChaValue}
                                         getCategoryPrice = {getCategoryPrice}
                                         getNextWorkDate = {getNextWorkDate}
-                                        onClose={() => onChangeCheck({ target: { checked: false } }, index)}
+                                        onClose={() => onChangeCheck(
+                                            categoryName == 0 ? { target: { checked: false } } : { target: { checked: true } }, 
+                                            index,
+                                        )}
                                         onConfirmClose={() => onChangeCheck({ target: { checked: true } }, index)}
                                         checkCloseBtn = {checkCloseBtn}
                                     />

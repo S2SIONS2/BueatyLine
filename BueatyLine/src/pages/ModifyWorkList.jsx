@@ -1,6 +1,6 @@
 import './AddWork.scss';
 import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import CategoryWork from '../components/CategoryWork';
 import { jwtDecode } from 'jwt-decode';
@@ -244,6 +244,13 @@ const ModifyWork = () => {
         element.current.scrollIntoView({behavor: 'smooth', block: "start"})
     }
 
+    // 모달 중복 생성 방지
+    const checkRepeat = (index) => {
+        if(isChecked[index] == true){
+            alert('작업 내역은 중복으로 추가 할 수 없습니다.')
+        }
+    }
+
     // 고객명 입력
     const [customerName, setCustomerName] = useState(''); // 작업 한 고객 명 검색
     const [serachName, setSearchName] = useState([]); // 검색된 연락처 api 리스트
@@ -459,20 +466,7 @@ const ModifyWork = () => {
             console.error(error)
         }
     }
-
-    const readInfo = () => {
-        console.log(listCategoryName)
-        console.log(listCategoryNameIdx)
-        console.log(listPrice)
-        console.log(listChaValue)
-
-        console.log(nextDate)
-        console.log(combineCategoryIdx)
-        console.log(combinePrice)
-        console.log(combineCha)
-        
-    }
-
+    
     if (loading) {
         return (
             <Loading /> // 로딩 중 표시
@@ -482,7 +476,6 @@ const ModifyWork = () => {
     return (
         <div className="ModifyWork position-relative" ref={element}>
             <div className='subTitle'>Work List 수정</div>
-            <button type='button' onClick={readInfo}>클릭</button>
             <div>
                 <section className='mb-4'>
                     <h6 className='fw-bold'>작업 날짜</h6>
@@ -518,7 +511,7 @@ const ModifyWork = () => {
                                     <button key={index} type='button' className='h-auto text-center mb-2 btnReset' 
                                         onClick={() => {
                                             modifyInfo(index);
-                                            moveTop();
+                                            moveTop();                                            
                                         }}
                                         > <FontAwesomeIcon icon={faPen} /> </button>
                                 ))
@@ -564,7 +557,7 @@ const ModifyWork = () => {
                                         className='me-2'
                                         checked={isChecked[index] || false}
                                         onChange={(e) => onChangeCheck(e, index)}
-                                        onClick={moveTop}
+                                        onClick={() => {moveTop(); checkRepeat(index)}}
                                     /> {item.category_name}
                                 </label>
                                 {categoryModal[index] &&
@@ -578,7 +571,10 @@ const ModifyWork = () => {
                                         getChaValue = {getChaValue}
                                         getCategoryPrice = {getCategoryPrice}
                                         getNextWorkDate = {getNextWorkDate}
-                                        onClose={() => onChangeCheck({ target: { checked: false } }, index)}
+                                        onClose={() => onChangeCheck(
+                                            categoryName == 0 ? { target: { checked: false } } : { target: { checked: true } }, 
+                                            index,
+                                        )}
                                         onConfirmClose={() => onChangeCheck({ target: { checked: true } }, index)}
                                         checkCloseBtn = {checkCloseBtn}
                                     />
