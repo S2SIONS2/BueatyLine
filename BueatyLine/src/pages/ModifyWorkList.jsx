@@ -240,6 +240,7 @@ const ModifyWork = () => {
     useEffect(() => {
         if (subWorkList.length > 0 && list.length > 0) {
             checkIsChecked()
+            setCustomerIdx(workList.idx_kmc_member)
         }
     }, [subWorkList, list])
 
@@ -278,7 +279,7 @@ const ModifyWork = () => {
     }
 
     // 고객명 입력
-    const [customerName, setCustomerName] = useState(''); // 작업 한 고객 명 검색
+    const [customerName, setCustomerName] = useState(workList.customerName || ''); // 작업 한 고객 명 검색
     const [serachName, setSearchName] = useState([]); // 검색된 연락처 api 리스트
     const changeName = (e) => {
         setCustomerName(e.target.value);
@@ -308,20 +309,20 @@ const ModifyWork = () => {
             const listFromApi = data.list
             setSearchName(listFromApi)
 
-            const workIdxList = listFromApi.map(item => item.member_idx);
-            setCustomerIdx(workIdxList[0])
+            // const workIdxList = listFromApi.map(item => item.member_idx);
+            // setCustomerIdx(workList.idx_kmc_member)
         }catch(error){
             console.error(error)
         }
     }
 
     // 이름 검색 후 확인
-    const [customerIdx, setCustomerIdx] = useState()
+    const [customerIdx, setCustomerIdx] = useState(workList.idx_kmc_member || null)
     const [show, setShow] = useState(true) // 멤버 리스트 show 관리
     const onClickName = (item) => {
         setCustomerIdx(item.member_idx)
         setShow(false) // 멤버 리스트 닫기
-        setCustomerName(item.member_name + ` [${item.member_phone}]`) // input에 클릭한 멤버 이름 보이게
+        setCustomerName(item.member_name) // input에 클릭한 멤버 이름 보이게
     }
 
     useEffect(() => {
